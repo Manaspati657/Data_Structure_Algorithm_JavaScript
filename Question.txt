@@ -1,0 +1,276 @@
+/**
+ * 
+ * Question Asked in interview.
+
+
+
+ 
+ * - types of methods for creating object
+ * - AuthGuards
+ * - Interceptors types of methods
+ * - @Input, @Output decorators.
+ * - Steps to create custom directive for mouse hover.
+ * - difference bet Viewchild and viewChildren
+ * - Code optimisation techniques
+ * - Angular Life cycle hooks.
+ * - Content projection.
+ * - ngtemplate and ngcontainer
+ * - how to merge two objects.
+ * - difference between rest operator and spread operator.
+ * - using Flexbox how to achieve div center.
+ * - Inline and block-level element in html.
+ * - What is the use of alt text in img tag.
+ * - what are the position property in css.
+ * -In search filter how to achieve single api call 
+ * -work flow of angular project-service is singleton or multiton.
+ * -I have array and i want to add new element in 3rd position on existing array what are the solution for this.
+ * -difference between splice and slice
+ * -semantic & inline element example
+ * -diff between promise and observables
+ * -diff between behaviour and subject behaviour
+ * 
+ * 
+ * -What are template reference variable?
+ * -What are angular lifecycle hooks and describe the calling sequence of them?
+ * -How we can detect preview and latest value changes using the lifecycle hook?
+ * -When ngOnChange will trigger.
+ * -When ngOnInit will trigger.
+ * -When ngAfterView will trigger.
+ * -When ngDoCheck will trigger.
+ * -If we have a template reference variable in the angular component, which lifecycle hook is best to get the 
+ *   value of the targeted element and why?
+ * -What is the use of ngOnDestroy?
+ * -what are bootstrap and angular materials?
+ * -Explain lifecycle -hook in angular
+ * -How  do you manage routing in angular ?
+ * -What git stash command does ?
+ * -How to pass data from parent to child and child to parent component?
+ * 
+ *  Angular 17 
+ * ==================
+ * -What is standalone?
+ * -How is lazy loading implemented in standalone?
+ * -How to pass data from parent to child component?
+ * -What are signals in angular? 
+ * -Apart from signals what is another approach to notify state in angular?
+ * - Which library you have used to design UI in angular?
+ * -Difference between ngxbootstrap and bootstrap, how to pass data in modal
+ * -Have you worked on RTL(Right to left)application?
+ * -How to translate angular application into multiple languages? Have you worked on it? 
+ * -How do you deploy angular application, Have you deployed it ?
+ * -How do you display certain things on different environments such as UAT, Development?
+ * -What is your approach to design an application suppose if figma design is given?
+ * -What is @if, @for in angular 17?
+ * -What are services in angular? 
+ * -HTTP methods and how to display status error message?
+ * -Have you used ngtemplate?
+ * 
+ * Angular 17 
+ * ==================
+ * 
+ * -What is the filter method and return type of filter method?
+ * -Take array of numbers and filter the array by multiple of 6
+ * -What is new feature provided in latest version.
+ * -What is Signals?
+ * -Life cycle hook of Angular.
+ * -Explain ngOnChanges life cycle hook.
+ * -How you communicate form child to Parents component using ViewChild?
+ * -What is Lazy Loading?
+ * -What is the Server Side Rendering?
+ * -Explain Change Detection Strategy and its type.
+ * 
+ * 
+ * ---------------------------------------------------------
+ * 
+ * 
+ * 
+ * - All questions based on scenario, past work experience, few theory questions,'
+ * - Why we started using Angular?
+ * - content projection
+ * - viewchild
+ * - sharing data between components, how to send html content from parent to child component?
+ * - Directives and its types
+ * - Lazy loading
+ * - How to improve performance of angular?
+ * - signals in angular 16
+ * - ngOnDestroy life cycle hook example
+ * - Any other ways for deep copy of object except json methods
+ * - state management
+ * - how to send parameters using router in angular
+ * - Error handling in angular
+ * - Http interceptor, token example
+ * - filter method
+ * - change detection
+ * - custom pipeAngular universal
+ * - One coding question was asked in JS, count the occurrences of the most frequent numbers in a given array
+ * 
+ * Angular 15 
+ * ===============
+ * - HTML new Tags
+ * - what is RXJS and RXJS operator 
+ * - typescript feature 
+ * - directive vs component 
+ * - pipes and angular 
+ * - bassel tool 
+ * - AOT vs JIT 
+ * - hoisting in javascript 
+ * - setTimeOut
+ * - Reactive forms vs Template driven forms
+ * 
+ * 
+ * - How the angular application works
+ * - Difference between angular JS and angular TS
+ * - What is authguard
+ * - What is vulnerability clearance (vapt)
+ * - What is pipe
+ * - What is difference between promises and observable
+ * - Why we use promiseAll
+ * - What is content projection
+ * - How can we inject service
+ * - Which architecture angular used
+ * - How you will authorised the particular user to your application
+ * - What is ngxtranslate
+ * - Have you worked on RTL(Right to left) application
+ * - Data sharing between 2 components
+ * - What is monorepo and polyrepo and microfrontend
+ * - How to migrate the angular application
+ * - How will you manage different environments like prod staging dev
+ * - ngbootstrap vs bootstrap
+ * - Libraries you have used in your past projects
+ * - View Child
+ * - How can we develop angular application from scratch
+ * - HTTP Interceptor
+ * - What is Change Detection, and how does the Change Detection Mechanism work?
+ * - What is most challenging task that you did till date
+ * - How the i18n works
+ * - api methods , put and post difference
+ * - What is box model
+ * 
+ * Angular 12
+ * =============
+ * 1. Based on UI component library, primeng, bootstrap, scenario based question, how to display data that is fetched from API in table, syntax
+ * 2. javascript code snippets output
+ * 3. How to share data between components if they are not parent and child component
+ * 4. Difference between subject and BehaviourSubject, when to use subject, scenario based
+ * 5. Scenario based question when to use reactive and template driven forms?
+ * 6. write code to create form with fields   user - only 20 chars to be allowed, this is required field surname - 10 chars to be allowed, this is required field age - 2 chars to be allowed,  
+ * 7. Flexbox, suppose there are 3 divs in a page then how to use flex?
+ * 8. lazy loading
+ * 9. routing in angular, and various ways to navigate from one component to other
+ * 10. How to send data from one component to other using routing?
+ * 11. questions related to previous work experience and work process
+ * 12. Based on resume one question was asked, about token, its working and how to use it?
+ * 13. Directives, have you worked on custom directive, give example.
+ * 14  Write a code for custom pipes 
+ * 15 Write a code to remove duplicate from string--- problem
+ * 16 What is authgurd And it's types  what are attributes
+ * 
+ * 
+ * Angular 16 
+ * ==============
+ * Angular 16 new features / improvements compared to angular 14
+ * Directives and its types? scenario based question to validate input field with error message using general approach, directive was the expected answer
+ * Pipes and its types
+ * Difference between subscribe and promise?
+ * Rxjs operators used in project?
+ * Difference between interface and class?
+ * Scenario based question, whether we can call an API on constructor or ngonInit()?
+ * query params in routes
+ * Httpclient methods in angular
+ * How can we share data between components using routing? 
+ * another ways to share dataHow to implement nested routing?
+ * What are modules and how to implement using route?
+ * Difference between var,let and const
+ * Angular 17 features
+ * How to pass message body in get / post, can we call put method without message body?
+ * How to handle error handling?
+ * What is bootstraping in angular?
+ * Bootstrap, scenario based question, show 3 cols on desktop, 2 on mobile, 6 on tab
+ * Difference between bootstrap 5 and 4, feature that was removed from bootstrap 5
+ * 
+ * 
+ * 
+ * What is module in angular?
+ * What is AOT compilation in angular?
+ * How many templates you worked on in previous project?
+ * What is difference between the AOT and Lazy loading?
+ * If i have to use change detection property  on chart and table on dashboard when data received from api?
+ * Angular Previous project scenario based questions
+ * NgModule use case , Declarations,imports and providers what use of that
+ * 
+ * 
+ * Angular 15
+ * ==========
+ * 
+ * Introduction and about previous project.
+ * Question related to previous project.
+ * What new features are there in Angular 15/16 compared to Angular 7.
+ * How would you make your component standalone.
+ * Where would you add imports, service and modules in standalone component.
+ * Where do you add imports, service and modules in NgModule.
+ * What is the use and advantage of using module.
+ * How would you lazy load a module.
+ * How would you communicate or pass data between two unrelated components
+ * What is difference between Subject and Behavior Subject.
+ * How would you cancel the subscription to subjects.
+ * What is service, and what are its use?
+ * Explain how would you make http request using service.
+ * Difference between Rxjs operators SwitchMap and MergeMap.
+ * How would you add search feature with debounce time in angular.
+ * How would you bind data from api to form inputs using template driven and also how to do the same in Reactive form.
+ * How would you add max validator to an input in reactive form.
+ * What is NgRx. Have you worked on it?
+ * How would you add 3 divs in same row using css, and how can that be done using bootstrap.
+ * How to center a div.
+ * How do you unit test the http service.
+ * What is interceptor.
+ * How would you handle http error.
+ *  What is there in index.html file.
+ * 
+ * 
+ * 
+ * Angular 12
+ * ===========
+ * 1) Introduction, last project details and questions related to it
+ * 2) How does authentication flow works
+ * 3) Parent child communication on code
+ * 4) Question on filter, map, find,rest params and spread operators
+ * 5) How to do deep copy
+ * 6) Different types of binding
+ * 7) Type of directives
+ * 8) What is interceptors.
+ * 9) Have you done Unit Testing in angular.
+ * 10) What is use of beforeEach in unit test.
+ * 11) How do you test an api.
+ * 12) Find the minimum no of coins from coinArr [1,2,5,10] to find note amount where note can be any amount(eg:95)
+ * 13) pure and impure pipe 
+ * 
+ * 
+ * 
+ * 
+ * What is form array?
+ * What are PWA?
+ * What are observables?
+ * How API calling is done in angular?
+ * What are angular life-cycle hooks?
+ * ow data sharing is done between components in angular?
+ * What are the differences between CSS & SCSS.
+ * What is bootstrap and how it is implemented in Angular?
+ * What are shared modules?
+ * 
+ * If i have checkbox & if i have checked that which lifecycle hook gets called?
+ * Reverse a string (NAVIN) & find duplicate char -problem
+ * How configure bootstrap with angular
+ * Security Angular
+ * Any Encryption used
+ * Create a custom directive to change the element styles.
+ * Lazy loading in Angular
+ * Explain routing in angular
+ * How to manage security in angular  ?
+ * How to write test cases in angular, write syntax for the same
+ * write program for the data communication from angular to API server ?
+ * .what is data binding..? Types of data binding...?oneway and twoway data binding(property binding,event binding)
+ * What is single page Application..?
+ * How to pass Entaire HTML elements to Ts..?
+ * 
+ */

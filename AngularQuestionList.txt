@@ -1,0 +1,175 @@
+ Angular interview Question list:
+
+1. Types of methods for creating objects in Angular.
+2. What are AuthGuards in Angular?
+3. Types of methods in interceptors.
+4. Usage of `@Input` and `@Output` decorators.
+5. Steps to create a custom directive for mouse hover.
+6. Difference between `ViewChild` and `ViewChildren`.
+7. Code optimization techniques in Angular.
+8. Angular lifecycle hooks and their sequence.
+9. Content projection in Angular.
+10. Usage of `ng-template` and `ng-container`.
+11. Merging two objects in Angular.
+12. Difference between rest operator and spread operator.
+13. Centering a div using Flexbox.
+14. Inline and block-level elements in HTML.
+15. Purpose of `alt` text in `<img>` tags.
+16. Position property in CSS.
+17. How to achieve a single API call in a search filter.
+18. Angular project workflow: is a service singleton or multiton?
+19. Adding a new element to the 3rd position of an existing array.
+20. Difference between `splice` and `slice`.
+
+21. Examples of semantic and inline elements.
+22. Difference between promises and observables.
+23. Difference between BehaviorSubject and Subject.
+
+24. Template reference variables in Angular.
+25. Angular lifecycle hooks and their calling sequence.
+26. Detecting previous and latest value changes using lifecycle hooks.
+27. Triggering of `ngOnChanges`, `ngOnInit`, `ngAfterView`, `ngDoCheck`.
+28. Best lifecycle hook to get the value of a template reference variable.
+29. Purpose of `ngOnDestroy`.
+30. Bootstrap vs Angular Material.
+31. Lifecycle hooks in Angular and their purpose.
+32. Managing routing in Angular.
+33. Purpose of `git stash`.
+
+34. Passing data between parent and child components.
+35. What is a standalone component?
+36. Lazy loading in standalone components.
+37. Passing data from parent to child components.
+38. Signals in Angular.
+39. Approaches to notify state in Angular besides signals.
+40. UI design libraries used in Angular.
+41. Difference between `ngx-bootstrap` and Bootstrap, passing data in modals.
+42. Working with RTL (Right-to-Left) applications.
+43. Translating an Angular application into multiple languages.
+44. Deploying an Angular application.
+
+45. Displaying different environments like UAT and Development.
+46. Designing an application based on a Figma design.
+47. Usage of `@if` and `@for` in Angular 17.
+48. Services in Angular and their purpose.
+49. HTTP methods and displaying error status messages.
+50. Usage of `ng-template`.
+51. `filter` method and its return type.
+52. Filtering an array by multiples of 6.
+53. New features in Angular 15/16.
+54. Communication from child to parent component using `ViewChild`.
+55. What is Lazy Loading?
+56. Server-side rendering in Angular.
+57. Change Detection Strategy and its types.
+58. Reason for using Angular.
+59. Data sharing between components and passing HTML content.
+60. Improving Angular performance.
+61. Example of `ngOnDestroy`.
+62. Methods for deep copying an object other than JSON methods.
+63. State management in Angular.
+64. Sending parameters through Angular router.
+65. Error handling in Angular.
+66. HTTP interceptor example with token.
+67. Creating a custom pipe in Angular Universal.
+68. Counting occurrences of the most frequent numbers in an array (JS coding question).
+69. New HTML tags in Angular 15.
+70. RxJS and RxJS operators.
+71. TypeScript features in Angular.
+72. Difference between directives and components.
+73. Usage of pipes in Angular.
+74. Basel tool in Angular.
+75. Difference between AOT and JIT.
+76. `setTimeout` usage in JavaScript.
+77. Reactive forms vs template-driven forms.
+78. How an Angular application works.
+79. AngularJS vs Angular.
+80. What is an AuthGuard?
+81. What is vulnerability clearance (VAPT)?
+82. Purpose of a pipe in Angular.
+83. Purpose of `Promise.all`.
+84. Service injection in Angular.
+85. Architecture used in Angular.
+86. User authorization in an application.
+87. What is `ngx-translate`?
+88. Data sharing between two components.
+89. Difference between monorepo, polyrepo, and microfrontend.
+90. Migration of an Angular application.
+91. Managing environments like prod, staging, dev.
+92. Libraries used in past projects.
+93. Developing an Angular application from scratch.
+94. Example of an HTTP interceptor.
+95. Most challenging task done to date.
+96. How i18n works in Angular.
+97. Difference between PUT and POST API methods.
+98. CSS box model.
+99. Displaying data from an API in a table using UI component libraries.
+100. JavaScript code snippets and outputs.
+101. Sharing data between non-parent-child components.
+102. Difference between Subject and BehaviorSubject.
+103. When to use reactive vs template-driven forms.
+104. Code for creating forms with input length restrictions.
+105. Flexbox usage for positioning three divs.
+106. Angular routing and navigation methods.
+107. Passing data between components using routing.
+108. Token usage in a resume-based question.
+109. Example of a custom directive.
+110. Code for creating custom pipes.
+111. Removing duplicates from a string.
+112. Different types of AuthGuards.
+113. Features in Angular 16 vs Angular 14.
+114. Validating input fields with error messages using directives.
+115. Difference between `subscribe` and promises.
+116. RxJS operators used in projects.
+117. Difference between interfaces and classes.
+118. API calls in constructor vs `ngOnInit`.
+119. Query parameters in routes.
+120. HTTP client methods in Angular.
+121. Sharing data and nested routing.
+122. Modules and implementing routing.
+123. Difference between `var`, `let`, and `const`.
+124. Angular 17 features.
+125. Passing message bodies in GET/POST and using PUT without a body.
+126. Error handling methods in Angular.
+127. Bootstrapping in Angular.
+128. CSS for responsive columns in Bootstrap.
+129. Differences between Bootstrap 5 and 4.
+130. Using a template reference variable in Angular.
+131. Creating a custom directive to change element styles.
+132. Routing in Angular.
+133. Security management in Angular.
+134. Writing test cases in Angular.
+135. Program for data communication with an API server.
+136. What is data binding and its types?
+137. What is a single-page application (SPA)?
+138. Passing entire HTML elements to TypeScript.
+139. Lifecycle hook called when a checkbox is checked.
+140. Reversing a string and finding duplicate characters.
+141. Configuring Bootstrap with Angular.
+142. Encryption methods used in Angular.
+143. Making HTTP requests using services.
+144. Difference between `switchMap` and `mergeMap`.
+145. Adding a search feature with debounce time.
+146. Binding API data to form inputs using template-driven and reactive forms.
+147. Adding a max validator to reactive forms.
+148. Working with NgRx.
+149. Centering a div.
+150. Unit testing an HTTP service.
+151. Handling HTTP errors.
+152. Structure and purpose of `index.html` in Angular.
+153. Authentication flow in Angular.
+154. Parent-child communication methods.
+155. Different types of data binding.
+156. Angular lifecycle hooks for data sharing.
+157. Differences between CSS and SCSS.
+158. Bootstrap integration in Angular.
+159. Shared modules in Angular.
+160. Angular form arrays.
+161. Progressive Web Apps (PWAs).
+162. Observables in Angular.
+163. API calling methods in Angular.
+164. Angular lifecycle hooks and their uses.
+165. Security configuration in Angular.
+166. Writing test cases in Angular.
+167. Event loop -- all key concept and callback queue type.
+168. js syntax : https://youtu.be/K2lfyPAwD80?si=sxjNU42QtrccJ4Jq
+

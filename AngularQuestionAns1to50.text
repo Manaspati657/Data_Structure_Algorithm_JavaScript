@@ -1,0 +1,877 @@
+Answer:
+========
+
+### 1. **Types of Methods for Creating Objects in Angular**
+
+In Angular, objects can be created in various ways. Here are a few examples:
+
+**Example using a class:**
+```typescript
+class User {
+  constructor(public name: string, public age: number) {}
+}
+
+const user = new User("Alice", 25);
+```
+
+**Explanation:**  
+Creating objects using classes allows for a structured approach with methods and properties, making the code easier to manage and scale.
+
+**Example using object literals:**
+```typescript
+const user = {
+  name: "Alice",
+  age: 25,
+};
+```
+
+**Explanation:**  
+Object literals are quick to write and efficient for simple data structures but lack structure for complex applications.
+
+---
+
+### 2. **What are AuthGuards in Angular?**
+
+AuthGuards are used to control route access based on certain conditions, like user authentication.
+
+**Example:**
+```typescript
+import { Injectable } from '@angular/core';
+import { CanActivate, Router } from '@angular/router';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthGuard implements CanActivate {
+  constructor(private router: Router) {}
+
+  canActivate(): boolean {
+    const isLoggedIn = !!localStorage.getItem('token');
+    if (!isLoggedIn) {
+      this.router.navigate(['/login']);
+      return false;
+    }
+    return true;
+  }
+}
+```
+
+**Explanation:**  
+This example checks if a token is stored in local storage to determine if a user is logged in. If the user is not logged in, they are redirected to the login page. AuthGuards can also be used to prevent access to specific routes.
+
+---
+
+### 3. **Types of Methods in Interceptors**
+
+Interceptors can handle requests and responses globally, such as adding headers or logging errors.
+
+**Example:**
+```typescript
+import { Injectable } from '@angular/core';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
+@Injectable()
+export class AuthInterceptor implements HttpInterceptor {
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const token = localStorage.getItem('token');
+    const clonedRequest = req.clone({
+      headers: req.headers.set('Authorization', `Bearer ${token}`)
+    });
+
+    return next.handle(clonedRequest).pipe(
+      catchError(error => {
+        console.error('Error in request', error);
+        throw error;
+      })
+    );
+  }
+}
+```
+
+**Explanation:**  
+The `intercept` method modifies every outgoing HTTP request by adding an Authorization header if a token exists. It also catches any errors in the HTTP request.
+
+---
+
+### 4. **Usage of `@Input` and `@Output` Decorators**
+
+`@Input` allows data to be passed from a parent to a child component, while `@Output` emits data from the child to the parent.
+
+**Example:**
+```typescript
+// Child Component
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+
+@Component({
+  selector: 'app-child',
+  template: `<p>{{ data }}</p><button (click)="sendData()">Send Data</button>`
+})
+export class ChildComponent {
+  @Input() data!: string;
+  @Output() dataEvent = new EventEmitter<string>();
+
+  sendData() {
+    this.dataEvent.emit("Data from child");
+  }
+}
+
+// Parent Component
+@Component({
+  selector: 'app-parent',
+  template: `<app-child [data]="parentData" (dataEvent)="receiveData($event)"></app-child>`
+})
+export class ParentComponent {
+  parentData = "Data from parent";
+
+  receiveData(event: string) {
+    console.log(event); // Output: Data from child
+  }
+}
+```
+
+**Explanation:**  
+`@Input` in `ChildComponent` receives data from the parent component, while `@Output` in `ChildComponent` sends data to the parent.
+
+---
+
+### 5. **Steps to Create a Custom Directive for Mouse Hover**
+
+Directives add behavior to elements. Here’s how to create a custom directive to change an element's color on hover.
+
+**Example:**
+```typescript
+import { Directive, ElementRef, HostListener, Renderer2 } from '@angular/core';
+
+@Directive({
+  selector: '[appHover]'
+})
+export class HoverDirective {
+  constructor(private el: ElementRef, private renderer: Renderer2) {}
+
+  @HostListener('mouseenter') onMouseEnter() {
+    this.renderer.setStyle(this.el.nativeElement, 'color', 'blue');
+  }
+
+  @HostListener('mouseleave') onMouseLeave() {
+    this.renderer.removeStyle(this.el.nativeElement, 'color');
+  }
+}
+```
+
+**Explanation:**  
+The directive listens for mouse events on the element and changes its color on hover.
+
+---
+
+### 6. **Difference Between `ViewChild` and `ViewChildren`**
+
+- `@ViewChild` selects a single element or component.
+- `@ViewChildren` retrieves multiple elements or components as a `QueryList`.
+
+**Example:**
+```typescript
+import { Component, ViewChild, ViewChildren, AfterViewInit, QueryList } from '@angular/core';
+
+@Component({
+  selector: 'app-parent',
+  template: `<app-child #child1></app-child><app-child #child2></app-child>`
+})
+export class ParentComponent implements AfterViewInit {
+  @ViewChild('child1') singleChild!: any;
+  @ViewChildren('child2') multipleChildren!: QueryList<any>;
+
+  ngAfterViewInit() {
+    console.log(this.singleChild); // Reference to first child
+    console.log(this.multipleChildren.toArray()); // Array of all matched children
+  }
+}
+```
+
+**Explanation:**  
+`ViewChild` is used when we need one element, and `ViewChildren` is for multiple elements.
+
+---
+
+### 7. **Code Optimization Techniques in Angular**
+
+Some common code optimization techniques in Angular include:
+
+- **Lazy Loading**: Load modules only when required.
+- **Change Detection Strategy**: Use `OnPush` for optimized change detection.
+- **Tree Shaking**: Removes unused code in the final bundle.
+- **Ahead-of-Time (AOT) Compilation**: Compiles HTML and TypeScript code during the build.
+
+**Example of Change Detection:**
+```typescript
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+
+@Component({
+  selector: 'app-optimized',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `<p>Optimized component</p>`
+})
+export class OptimizedComponent {}
+```
+
+**Explanation:**  
+Using `OnPush` in change detection ensures that the component only updates when its input properties change, enhancing performance.
+
+---
+
+### 8. **Angular Lifecycle Hooks and Their Sequence**
+
+Angular components have a lifecycle managed by Angular. Key hooks include:
+
+1. `ngOnChanges`: Called when input properties change.
+2. `ngOnInit`: Called once after the first `ngOnChanges`.
+3. `ngDoCheck`: Custom change detection.
+4. `ngAfterContentInit`: After content projection.
+5. `ngAfterContentChecked`: After content projection check.
+6. `ngAfterViewInit`: After view initialization.
+7. `ngAfterViewChecked`: After view check.
+8. `ngOnDestroy`: Cleanup on component destroy.
+
+**Example:**
+```typescript
+import { Component, OnInit, OnDestroy } from '@angular/core';
+
+@Component({
+  selector: 'app-lifecycle',
+  template: `<p>Lifecycle demo</p>`
+})
+export class LifecycleComponent implements OnInit, OnDestroy {
+  ngOnInit() {
+    console.log('Component initialized');
+  }
+
+  ngOnDestroy() {
+    console.log('Component destroyed');
+  }
+}
+```
+
+**Explanation:**  
+`ngOnInit` is useful for initialization logic, while `ngOnDestroy` is for cleanup.
+
+---
+
+### 9. **Content Projection in Angular**
+
+Content projection allows passing content from a parent to a child component using `<ng-content>`.
+
+**Example:**
+```typescript
+// Child Component
+@Component({
+  selector: 'app-child',
+  template: `<ng-content></ng-content>`
+})
+export class ChildComponent {}
+
+// Parent Component
+@Component({
+  selector: 'app-parent',
+  template: `<app-child><p>Projected Content</p></app-child>`
+})
+export class ParentComponent {}
+```
+
+**Explanation:**  
+The content within `<app-child>` in the parent component is projected inside the child component.
+
+---
+
+### 10. **Usage of `ng-template` and `ng-container`**
+
+- **`ng-template`**: Defines a template that isn’t rendered directly but can be used conditionally.
+- **`ng-container`**: Group elements without adding extra DOM elements.
+
+**Example:**
+```html
+<ng-template #templateContent>
+  <p>This is template content.</p>
+</ng-template>
+
+<ng-container *ngIf="showContent">
+  <p>This content is conditionally shown without extra DOM elements.</p>
+</ng-container>
+```
+
+**Explanation:**  
+`ng-template` and `ng-container` help control how content is displayed, enhancing flexibility and reducing DOM clutter.
+
+
+Certainly! Here’s the rest of the questions answered in the same format, with examples, explanations, and code where applicable.
+
+---
+
+### 11. **How to Merge Two Objects in JavaScript**
+
+You can merge two objects using the spread operator or `Object.assign()`.
+
+**Example using Spread Operator:**
+```typescript
+const obj1 = { a: 1, b: 2 };
+const obj2 = { b: 3, c: 4 };
+const mergedObj = { ...obj1, ...obj2 };
+
+console.log(mergedObj); // Output: { a: 1, b: 3, c: 4 }
+```
+
+**Example using `Object.assign()`:**
+```typescript
+const obj1 = { a: 1, b: 2 };
+const obj2 = { b: 3, c: 4 };
+const mergedObj = Object.assign({}, obj1, obj2);
+
+console.log(mergedObj); // Output: { a: 1, b: 3, c: 4 }
+```
+
+**Explanation:**  
+Both methods merge the properties of `obj1` and `obj2`. In case of overlapping properties (like `b`), the last value in the order will be retained.
+
+---
+
+### 12. **Difference Between Rest Operator and Spread Operator**
+
+- The **rest operator** collects multiple elements into a single variable (e.g., for function parameters).
+- The **spread operator** unpacks elements from an array or object.
+
+**Example of Rest Operator:**
+```typescript
+function greet(...names: string[]) {
+  console.log(names);
+}
+
+greet('Alice', 'Bob', 'Charlie'); // Output: ['Alice', 'Bob', 'Charlie']
+```
+
+**Example of Spread Operator:**
+```typescript
+const arr = [1, 2, 3];
+const newArr = [...arr, 4, 5];
+
+console.log(newArr); // Output: [1, 2, 3, 4, 5]
+```
+
+**Explanation:**  
+The rest operator collects all remaining arguments into an array, while the spread operator expands an array or object into individual elements or properties.
+
+---
+
+### 13. **How to Achieve Div Centering Using Flexbox**
+
+Flexbox is a layout model that allows easy centering of elements. To center a `div`:
+
+**Example:**
+```html
+<div class="container">
+  <div class="content">Center me!</div>
+</div>
+
+<style>
+  .container {
+    display: flex;
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+    height: 100vh; /* Full viewport height */
+  }
+</style>
+```
+
+**Explanation:**  
+Using `display: flex`, the container is set up to center the `.content` div both horizontally and vertically.
+
+---
+
+### 14. **Inline and Block-Level Elements in HTML**
+
+- **Block-level elements** take up the full width available and start on a new line (e.g., `<div>`, `<p>`, `<section>`).
+- **Inline elements** take up only as much width as necessary and do not start on a new line (e.g., `<span>`, `<a>`, `<strong>`).
+
+**Example:**
+```html
+<div>Block-level element</div>
+<span>Inline element</span>
+```
+
+**Explanation:**  
+Block elements will be stacked vertically, while inline elements will flow horizontally within the same line.
+
+---
+
+### 15. **What is the Use of `alt` Text in `<img>` Tag**
+
+The `alt` attribute in an image tag provides alternative text for the image if it cannot be displayed. It also improves accessibility.
+
+**Example:**
+```html
+<img src="logo.png" alt="Company Logo">
+```
+
+**Explanation:**  
+The `alt` text helps users with visual impairments understand the content of the image. It’s also used when images fail to load.
+
+---
+
+### 16. **What Are the Position Properties in CSS**
+
+CSS position properties control how elements are positioned on the page. These include:
+
+1. **static**: Default. Elements are positioned according to the normal document flow.
+2. **relative**: Positioned relative to its normal position.
+3. **absolute**: Positioned relative to the nearest positioned ancestor.
+4. **fixed**: Positioned relative to the browser window.
+5. **sticky**: Positioned based on the user’s scroll position.
+
+**Example:**
+```html
+<div class="relative">Relative Position</div>
+<div class="absolute">Absolute Position</div>
+
+<style>
+  .relative { position: relative; top: 10px; left: 20px; }
+  .absolute { position: absolute; top: 50px; left: 100px; }
+</style>
+```
+
+**Explanation:**  
+`relative` positions the element relative to its original location, while `absolute` positions it relative to its nearest positioned ancestor.
+
+---
+
+### 17. **How to Handle Single API Call for Search Filter**
+
+You can optimize the search by using a debounce mechanism, ensuring that the API is called only after the user stops typing.
+
+**Example using RxJS `debounceTime`:**
+```typescript
+import { Component } from '@angular/core';
+import { Subject } from 'rxjs';
+import { debounceTime, switchMap } from 'rxjs/operators';
+import { ApiService } from './api.service';
+
+@Component({
+  selector: 'app-search',
+  template: `<input (input)="searchQuery($event)" />`
+})
+export class SearchComponent {
+  searchTerm = new Subject<string>();
+
+  constructor(private apiService: ApiService) {
+    this.searchTerm.pipe(
+      debounceTime(300),
+      switchMap(term => this.apiService.search(term))
+    ).subscribe(result => console.log(result));
+  }
+
+  searchQuery(event: any) {
+    this.searchTerm.next(event.target.value);
+  }
+}
+```
+
+**Explanation:**  
+The `debounceTime` operator waits for 300ms after the user stops typing before making the API call, reducing the number of requests.
+
+---
+
+### 18. **Angular Project Workflow: Is a Service Singleton or Multiton?**
+
+In Angular, by default, services are **singleton** by design. This means that when a service is provided at the root level (via `providedIn: 'root'`), it is instantiated once and shared throughout the entire application. This helps to maintain a single instance of the service, saving memory and ensuring that data is shared across components or modules.
+
+**Singleton Service Example:**
+
+```typescript
+@Injectable({
+  providedIn: 'root',  // This makes the service a singleton
+})
+export class AuthService {
+  private user: any = null;
+
+  constructor() {}
+
+  login(userData: any) {
+    this.user = userData;
+  }
+
+  getUser() {
+    return this.user;
+  }
+}
+```
+
+**Explanation:**
+- The `AuthService` is provided in the root injector, meaning it is a singleton.
+- Any component that injects `AuthService` will get the same instance of the service, making it useful for managing global state like authentication status.
+
+### **When would a service be multiton?**
+
+You can create a **multiton service** by providing the service in a specific module or component rather than at the root level. This creates a new instance of the service for each module or component that injects it.
+
+**Multiton Service Example:**
+
+```typescript
+@Injectable({
+  providedIn: 'any',  // This makes the service multiton
+})
+export class CustomService {
+  private id: number;
+
+  constructor() {
+    this.id = Math.random();
+  }
+
+  getId() {
+    return this.id;
+  }
+}
+```
+
+**Explanation:**
+- Here, `providedIn: 'any'` ensures that each lazy-loaded module or component that injects `CustomService` gets its own instance, making it a multiton.
+- If the service is used in multiple lazy-loaded modules, each module will have its own instance of `CustomService`.
+
+### **Summary:**
+- **Singleton:** By default, Angular services are singleton when provided at the root level. There is one shared instance across the entire application.
+- **Multiton:** A service can be made multiton by providing it at the module or component level, resulting in a new instance for each module or component that uses it.
+
+---
+
+### 19. **How to Add New Element in the 3rd Position of an Array**
+
+To add a new element in the 3rd position, you can use the `splice` method.
+
+**Example:**
+```typescript
+let arr = [1, 2, 4, 5];
+arr.splice(2, 0, 3); // Adds 3 at index 2
+
+console.log(arr); // Output: [1, 2, 3, 4, 5]
+```
+
+**Explanation:**  
+`splice(index, 0, newElement)` allows you to insert a new element at a specified index without removing any existing elements.
+
+---
+
+### 20. **Difference Between `splice` and `slice`**
+
+- **`splice()`** modifies the original array by adding/removing elements.
+- **`slice()`** returns a new array and doesn’t modify the original.
+
+**Example using `splice()`:**
+```typescript
+let arr = [1, 2, 3, 4];
+arr.splice(1, 2, 5, 6); // Removes 2 and 3, adds 5 and 6
+
+console.log(arr); // Output: [1, 5, 6, 4]
+```
+
+**Example using `slice()`:**
+```typescript
+let arr = [1, 2, 3, 4];
+let newArr = arr.slice(1, 3); // Extracts elements from index 1 to 3 (excluding 3)
+
+console.log(newArr); // Output: [2, 3]
+```
+
+**Explanation:**  
+`splice()` alters the array directly, while `slice()` returns a new array without changing the original.
+
+---
+
+### 21. **Semantic & Inline Element Example**
+
+- **Semantic Elements**: These elements provide meaning about the content (e.g., `<article>`, `<section>`, `<header>`).
+- **Inline Elements**: These elements do not start on a new line (e.g., `<span>`, `<a>`, `<strong>`).
+
+**Example:**
+```html
+<section>
+  <header>Welcome to my website</header>
+  <p>This is an <strong>example</strong> of semantic HTML.</p>
+</section>
+```
+
+**Explanation:**  
+`<section>` and `<header>` are semantic tags that describe the document structure, while `<strong>` is an inline tag that applies bold styling.
+
+---
+
+### 22. **Difference Between Promise and Observable**
+
+- **Promise**: Represents a single asynchronous operation that returns a value or error in the future.
+- **Observable**: Represents multiple asynchronous events that can emit values over time.
+
+**Example using Promise:**
+```typescript
+let promise = new Promise((resolve, reject) => {
+  setTimeout(() => resolve('Done!'), 2000);
+});
+
+promise.then(result => console.log(result)); // Output: Done!
+```
+
+**Example using Observable:**
+```typescript
+import { Observable } from 'rxjs';
+
+let observable = new Observable(observer => {
+  setTimeout(() => observer.next('Event 1'), 1000);
+  setTimeout(() => observer.next('Event 2'), 2000);
+});
+
+observable.subscribe(value => console.log(value)); // Output: Event 1, Event 2
+```
+
+**Explanation:**  
+Promises are for single asynchronous events, while Observables handle multiple asynchronous events, making them more versatile.
+
+---
+
+Here’s the continuation from question 22, providing detailed answers with examples for each:
+
+---
+
+### 23. **Difference Between BehaviorSubject and Subject**
+
+- **Subject**: Multicasts to many observers but does not store the last value.
+- **BehaviorSubject**: Stores the last emitted value and sends it to new subscribers immediately.
+
+**Example using BehaviorSubject:**
+```typescript
+import { BehaviorSubject } from 'rxjs';
+
+let behaviorSubject = new BehaviorSubject('Initial Value');
+
+behaviorSubject.subscribe(value => console.log('Subscriber 1:', value));
+behaviorSubject.next('Updated Value');
+behaviorSubject.subscribe(value => console.log('Subscriber 2:', value));
+```
+
+**Output:**
+```
+Subscriber 1: Initial Value
+Subscriber 1: Updated Value
+Subscriber 2: Updated Value
+```
+
+**Explanation:**  
+- `BehaviorSubject` will always emit the last value to new subscribers. In this case, `Subscriber 2` receives the "Updated Value" immediately, even though it subscribes after the update.
+- **Subject** does not store the last emitted value, and new subscribers do not receive it.
+
+---
+
+
+Here are the answers to your questions:
+
+---
+
+### 24. **Template Reference Variables in Angular**
+
+A **template reference variable** is a reference to a DOM element or Angular directive in the template. It allows you to access properties and methods of the element or directive associated with it in your template. You can use it with Angular directives, components, or even native DOM elements.
+
+**Example:**
+
+```html
+<input #myInput type="text">
+<button (click)="onClick(myInput.value)">Submit</button>
+```
+
+**Explanation:**
+- The `#myInput` is a template reference variable that references the `input` element.
+- You can pass `myInput.value` to the component class when the button is clicked.
+
+---
+
+### 25. **Angular Lifecycle Hooks and Their Calling Sequence**
+
+Angular lifecycle hooks allow developers to hook into the different stages of a component's life, from creation to destruction.
+
+The typical sequence of lifecycle hooks for a component is:
+
+1. **`ngOnChanges`** - Called when the input properties of the component change.
+2. **`ngOnInit`** - Called once, after the first `ngOnChanges`.
+3. **`ngDoCheck`** - Called during every change detection cycle.
+4. **`ngAfterContentInit`** - Called once after content (ng-content) has been projected into the component.
+5. **`ngAfterContentChecked`** - Called after every change detection cycle of projected content.
+6. **`ngAfterViewInit`** - Called once after the view (and child views) are initialized.
+7. **`ngAfterViewChecked`** - Called after every change detection cycle for the view.
+8. **`ngOnDestroy`** - Called before the component is destroyed.
+
+---
+
+### 26. **Detecting Previous and Latest Value Changes Using Lifecycle Hooks**
+
+To detect the previous and latest value changes in Angular, you can use `ngOnChanges`, which gives you access to both the current and previous values of input properties.
+
+**Example:**
+
+```typescript
+import { Component, OnChanges, SimpleChanges, Input } from '@angular/core';
+
+@Component({
+  selector: 'app-example',
+  template: `<p>Previous: {{ previousValue }}</p><p>Current: {{ currentValue }}</p>`
+})
+export class ExampleComponent implements OnChanges {
+  @Input() currentValue: string;
+  previousValue: string;
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['currentValue']) {
+      this.previousValue = changes['currentValue'].previousValue;
+    }
+  }
+}
+```
+
+**Explanation:**
+- The `ngOnChanges` hook provides `SimpleChanges` which contains both the previous and current values of input properties.
+- You can access the previous value of `currentValue` through `changes['currentValue'].previousValue`.
+
+---
+
+### 27. **Triggering of `ngOnChanges`, `ngOnInit`, `ngAfterView`, `ngDoCheck`**
+
+- **`ngOnChanges`:** This hook is triggered when there is a change in the input properties of the component.
+- **`ngOnInit`:** This hook is triggered once when the component is initialized and inputs are set, i.e., once per component lifecycle.
+- **`ngDoCheck`:** This hook is triggered during every change detection cycle. It’s useful when you need to perform custom checks.
+- **`ngAfterViewInit`:** This hook is called once after the component's view and its children’s views have been initialized.
+
+---
+
+### 28. **Best Lifecycle Hook to Get the Value of a Template Reference Variable**
+
+The best lifecycle hook to access a template reference variable is **`ngAfterViewInit`**, because this hook is triggered after the component’s view and child views have been initialized. At this point, the template reference variables are fully available.
+
+**Example:**
+
+```typescript
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
+
+@Component({
+  selector: 'app-example',
+  template: `<input #myInput>`
+})
+export class ExampleComponent implements AfterViewInit {
+  @ViewChild('myInput') myInput;
+
+  ngAfterViewInit(): void {
+    console.log(this.myInput.nativeElement.value);  // Access the input's value after the view is initialized
+  }
+}
+```
+
+---
+
+### 29. **Purpose of `ngOnDestroy`**
+
+The `ngOnDestroy` lifecycle hook is used for cleanup tasks before a component or directive is destroyed. It is useful for tasks like unsubscribing from observables, canceling ongoing HTTP requests, or clearing timeouts and intervals.
+
+**Example:**
+
+```typescript
+import { Component, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
+
+@Component({
+  selector: 'app-example',
+  template: ``
+})
+export class ExampleComponent implements OnDestroy {
+  private subscription: Subscription;
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();  // Unsubscribing from observables to prevent memory leaks
+  }
+}
+```
+
+---
+
+### 30. **Bootstrap vs Angular Material**
+
+- **Bootstrap:** A CSS framework primarily focused on layout and design. It provides ready-to-use responsive design components like grids, buttons, navigation bars, etc. You can integrate it into Angular using the `ngx-bootstrap` package or simply by including the Bootstrap CSS.
+
+- **Angular Material:** A UI component library specifically designed for Angular applications based on Material Design principles. It offers a rich set of high-quality UI components such as buttons, forms, modals, tables, etc., that are Angular-specific and come with built-in support for accessibility and responsiveness.
+
+**Comparison:**
+- **Bootstrap** is more general-purpose, and can be used with any framework or plain HTML, whereas **Angular Material** is specifically tailored for Angular applications.
+- Angular Material provides more Angular-specific features, such as better form control integration and change detection support.
+
+---
+
+### 31. **Lifecycle Hooks in Angular and Their Purpose**
+
+The lifecycle hooks in Angular serve different purposes based on the component or directive lifecycle. Here's a quick recap of their purpose:
+
+1. **`ngOnChanges`**: Detects changes to input properties.
+2. **`ngOnInit`**: Initializes the component, usually for data-fetching or initial setups.
+3. **`ngDoCheck`**: Custom change detection logic, runs on every change detection cycle.
+4. **`ngAfterContentInit`**: Called after content (ng-content) is projected into the component.
+5. **`ngAfterContentChecked`**: Called after the content has been checked.
+6. **`ngAfterViewInit`**: Called after the component's view and its children are initialized.
+7. **`ngAfterViewChecked`**: Called after every change detection cycle for the view.
+8. **`ngOnDestroy`**: Cleanup logic before the component is destroyed.
+
+---
+
+### 32. **Managing Routing in Angular**
+
+Routing in Angular allows navigation between different views or components. You manage routing by configuring routes in the `AppRoutingModule`.
+
+**Example:**
+
+```typescript
+// app-routing.module.ts
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { HomeComponent } from './home/home.component';
+import { AboutComponent } from './about/about.component';
+
+const routes: Routes = [
+  { path: '', component: HomeComponent },
+  { path: 'about', component: AboutComponent }
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule {}
+```
+
+**Explanation:**
+- The `Routes` array defines the route paths and their corresponding components.
+- The `RouterModule.forRoot()` method is used to configure routing in the root module.
+
+---
+
+### 33. **Purpose of `git stash`**
+
+The `git stash` command is used to save changes that are not yet ready to commit, allowing you to revert the working directory to the state of the last commit. It’s useful when you’re in the middle of a task but need to switch to a different task without committing unfinished work.
+
+**Example:**
+
+1. Stash your changes:
+   ```bash
+   git stash
+   ```
+
+2. List your stashes:
+   ```bash
+   git stash list
+   ```
+
+3. Apply a stash:
+   ```bash
+   git stash apply
+   ```
+
+**Explanation:**
+- `git stash` temporarily saves your uncommitted changes.
+- `git stash apply` re-applies the changes you stashed.

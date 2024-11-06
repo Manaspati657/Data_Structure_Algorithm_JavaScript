@@ -1,0 +1,26 @@
+
+ts page syntax
+=================
+component class 
+service class
+module class 
+routing page - lazy loading
+form - reactive form create
+form - TDF ts page 
+api service methods 
+api service call method syntax - subscribe((data)=>{},(error)=>{})
+authgurd
+directive - mouse over element
+pipe- filter string which string includes numbers
+
+
+
+
+html syntax
+=========
+template driven form 
+reactive form 
+for loop 
+if else
+switch case 
+
