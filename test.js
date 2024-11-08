@@ -1,8 +1,7 @@
-console.log('Start');
-setTimeout(function() {
-  console.log('Timeout');
-}, 0);
-Promise.resolve().then(function() {
-  console.log('Promise');
-});
-console.log('End'); 
+let x =null;
+if(!x){
+  console.log("hiiiii");
+}else{
+  console.log("hello");
+  
+}

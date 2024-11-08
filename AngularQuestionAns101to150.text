@@ -1,0 +1,1189 @@
+
+---
+
+### **101. Sharing data between non-parent-child components**
+
+To share data between components that are not directly related (neither parent-child nor child-parent), Angular services are typically used. This approach involves creating a service with properties or methods that can be injected into the components requiring shared data access.
+
+#### Example:
+```typescript
+// data.service.ts
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class DataService {
+  private dataSource = new BehaviorSubject<string>('Initial Data');
+  currentData = this.dataSource.asObservable();
+
+  changeData(data: string) {
+    this.dataSource.next(data);
+  }
+}
+
+// component-a.component.ts
+import { Component } from '@angular/core';
+import { DataService } from './data.service';
+
+@Component({
+  selector: 'app-component-a',
+  template: `<button (click)="sendData()">Send Data</button>`
+})
+export class ComponentA {
+  constructor(private dataService: DataService) {}
+
+  sendData() {
+    this.dataService.changeData('Data from Component A');
+  }
+}
+
+// component-b.component.ts
+import { Component, OnInit } from '@angular/core';
+import { DataService } from './data.service';
+
+@Component({
+  selector: 'app-component-b',
+  template: `<p>{{data}}</p>`
+})
+export class ComponentB implements OnInit {
+  data: string;
+
+  constructor(private dataService: DataService) {}
+
+  ngOnInit() {
+    this.dataService.currentData.subscribe(data => this.data = data);
+  }
+}
+```
+
+---
+
+### **102. Difference between Subject and BehaviorSubject**
+
+- **Subject**: Emits data to subscribers only after they have subscribed.
+- **BehaviorSubject**: Holds the last emitted value, allowing subscribers to receive the latest value upon subscription, even if they subscribed after the last emission.
+
+#### Example:
+```typescript
+import { Subject, BehaviorSubject } from 'rxjs';
+
+const subject = new Subject<number>();
+subject.subscribe(value => console.log('Subject Subscriber:', value));
+subject.next(1); // Only emits from now on
+
+const behaviorSubject = new BehaviorSubject<number>(0); // Initial value
+behaviorSubject.subscribe(value => console.log('BehaviorSubject Subscriber:', value));
+behaviorSubject.next(2); // Emits immediately with last known value
+```
+
+---
+
+### **103. When to use reactive vs template-driven forms**
+
+- **Reactive Forms**: Better suited for complex scenarios, validation, and dynamic form controls.
+- **Template-driven Forms**: Recommended for simple forms with less validation needs and when form structure is static.
+
+---
+
+### **104. Code for creating forms with input length restrictions**
+
+#### Example:
+```typescript
+// app.component.html
+<form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+  <label>
+    Username (max 20 chars):
+    <input formControlName="username" maxlength="20" required />
+  </label>
+  <label>
+    Surname (max 10 chars):
+    <input formControlName="surname" maxlength="10" required />
+  </label>
+  <label>
+    Age (max 2 chars):
+    <input formControlName="age" maxlength="2" required />
+  </label>
+  <button type="submit">Submit</button>
+</form>
+
+// app.component.ts
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html'
+})
+export class AppComponent {
+  myForm: FormGroup;
+
+  constructor(private fb: FormBuilder) {
+    this.myForm = this.fb.group({
+      username: ['', [Validators.required, Validators.maxLength(20)]],
+      surname: ['', [Validators.required, Validators.maxLength(10)]],
+      age: ['', [Validators.required, Validators.maxLength(2)]]
+    });
+  }
+
+  onSubmit() {
+    console.log(this.myForm.value);
+  }
+}
+```
+
+---
+
+### **105. Flexbox usage for positioning three divs**
+
+To create a row layout with three equal-width divs:
+
+#### Example:
+```html
+<div style="display: flex;">
+  <div style="flex: 1; border: 1px solid black;">Div 1</div>
+  <div style="flex: 1; border: 1px solid black;">Div 2</div>
+  <div style="flex: 1; border: 1px solid black;">Div 3</div>
+</div>
+```
+
+---
+
+### **106. Angular routing and navigation methods**
+
+Angular provides several methods for navigating between routes, such as:
+- **RouterLink** directive in the template
+- **Router** service in the component’s code
+
+#### Example:
+```typescript
+// In HTML template
+<a [routerLink]="['/path']">Navigate</a>
+
+// In Component
+import { Router } from '@angular/router';
+
+constructor(private router: Router) {}
+
+navigateToPath() {
+  this.router.navigate(['/path']);
+}
+```
+
+---
+
+### **107. Passing data between components using routing**
+
+You can pass data between components by defining route parameters or query parameters.
+
+#### Example:
+```typescript
+// In routing module
+{ path: 'component-b/:id', component: ComponentB }
+
+// In Component A
+this.router.navigate(['/component-b', 42]);
+
+// In Component B
+import { ActivatedRoute } from '@angular/router';
+
+constructor(private route: ActivatedRoute) {}
+
+ngOnInit() {
+  const id = this.route.snapshot.paramMap.get('id');
+  console.log(id); // Outputs: 42
+}
+```
+
+---
+
+### **108. Token usage in a resume-based question**
+
+**Token Example**: In authentication, tokens (such as JWT) are commonly used to secure API requests.
+
+#### Explanation:
+1. **Generate a Token**: The server generates a JWT when a user logs in.
+2. **Use Token in Requests**: Each subsequent API request from the client includes the JWT in the header.
+3. **Validate Token**: The server validates the JWT, verifying the user’s identity.
+
+---
+
+### **109. Example of a custom directive**
+
+A directive to change text color on hover.
+
+#### Example:
+```typescript
+// highlight.directive.ts
+import { Directive, ElementRef, HostListener } from '@angular/core';
+
+@Directive({
+  selector: '[appHighlight]'
+})
+export class HighlightDirective {
+  constructor(private el: ElementRef) {}
+
+  @HostListener('mouseenter') onMouseEnter() {
+    this.el.nativeElement.style.color = 'blue';
+  }
+
+  @HostListener('mouseleave') onMouseLeave() {
+    this.el.nativeElement.style.color = '';
+  }
+}
+
+// Usage in component HTML
+<p appHighlight>Hover over this text to change its color!</p>
+```
+
+---
+
+### **110. Code for creating custom pipes**
+
+A custom pipe to convert text to uppercase.
+
+#### Example:
+```typescript
+// uppercase.pipe.ts
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'uppercase'
+})
+export class UppercasePipe implements PipeTransform {
+  transform(value: string): string {
+    return value.toUpperCase();
+  }
+}
+
+// Usage in component HTML
+<p>{{ 'hello world' | uppercase }}</p> <!-- Outputs: HELLO WORLD -->
+```
+
+---
+
+### **111. Removing duplicates from a string**
+
+To remove duplicates from a string, you can use a `Set` to store unique characters and then join them back.
+
+#### Example:
+```javascript
+function removeDuplicates(str) {
+  return Array.from(new Set(str)).join('');
+}
+
+console.log(removeDuplicates("programming")); // Output: "progamin"
+```
+
+---
+
+### **112. Different types of AuthGuards**
+
+In Angular, `AuthGuard` can be used to protect routes based on different conditions.
+
+1. **CanActivate**: Checks if a route can be activated.
+2. **CanDeactivate**: Checks if a user can leave a route.
+3. **CanLoad**: Determines if a module can be loaded.
+4. **CanActivateChild**: Checks if a child route can be activated.
+
+#### Example:
+```typescript
+import { Injectable } from '@angular/core';
+import { CanActivate, Router } from '@angular/router';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthGuard implements CanActivate {
+  constructor(private router: Router) {}
+
+  canActivate(): boolean {
+    const isAuthenticated = Boolean(localStorage.getItem('token'));
+    if (!isAuthenticated) {
+      this.router.navigate(['/login']);
+    }
+    return isAuthenticated;
+  }
+}
+```
+
+---
+
+### **113. Features in Angular 16 vs Angular 14**
+
+1. **Signals**: Angular 16 introduced signals for fine-grained reactivity, providing an alternative to the traditional change detection.
+2. **Standalone APIs**: Angular 15/16 pushed the use of standalone components, making it easier to manage modules.
+3. **Improved Server-Side Rendering**: Faster and optimized SSR capabilities in Angular 16.
+4. **Router Improvements**: Enhanced router features like `RouteConfigLoadStart` and `RouteConfigLoadEnd` events for better lazy loading insights.
+
+---
+
+### **114. Validating input fields with error messages using directives**
+
+To validate an input field, you can create a custom directive that sets error messages based on the validation criteria.
+
+#### Example:
+```typescript
+// custom-validator.directive.ts
+import { Directive, Input, ElementRef, Renderer2, HostListener } from '@angular/core';
+
+@Directive({
+  selector: '[appCustomValidator]'
+})
+export class CustomValidatorDirective {
+  @Input() maxLength: number;
+
+  constructor(private el: ElementRef, private renderer: Renderer2) {}
+
+  @HostListener('input') onInput() {
+    const inputValue = this.el.nativeElement.value;
+    if (inputValue.length > this.maxLength) {
+      this.renderer.setStyle(this.el.nativeElement, 'border', '1px solid red');
+    } else {
+      this.renderer.setStyle(this.el.nativeElement, 'border', '1px solid green');
+    }
+  }
+}
+
+// Usage in component HTML
+<input type="text" appCustomValidator [maxLength]="5">
+```
+
+---
+
+### **115. Difference between `subscribe` and promises**
+
+- **`subscribe`**: Used with Observables in RxJS. It can handle multiple emissions over time.
+- **Promise**: Used for a single asynchronous operation. It resolves once and cannot be canceled.
+
+#### Example:
+```typescript
+import { of } from 'rxjs';
+
+of('Hello').subscribe(data => console.log(data)); // Logs "Hello" each time it emits
+
+new Promise((resolve) => resolve('Hello')).then(data => console.log(data)); // Logs "Hello" once
+```
+
+---
+
+### **116. RxJS operators used in projects**
+
+Some commonly used RxJS operators include:
+
+1. **map**: Transforms the emitted values.
+2. **filter**: Filters values based on a condition.
+3. **switchMap**: Cancels previous observable and switches to the new one.
+4. **mergeMap**: Merges multiple observables.
+5. **catchError**: Handles errors in an observable stream.
+
+#### Example:
+```typescript
+import { of } from 'rxjs';
+import { map, filter } from 'rxjs/operators';
+
+of(1, 2, 3, 4).pipe(
+  filter(num => num % 2 === 0), // Filters even numbers
+  map(num => num * 10) // Multiplies each by 10
+).subscribe(result => console.log(result)); // Output: 20, 40
+```
+
+---
+
+### **117. Difference between interfaces and classes**
+
+- **Interfaces**: Define the structure or contract without implementation.
+- **Classes**: Can have both structure and implementation, allowing methods and properties.
+
+#### Example:
+```typescript
+interface Person {
+  name: string;
+  age: number;
+}
+
+class Employee implements Person {
+  constructor(public name: string, public age: number) {}
+
+  getDetails() {
+    return `${this.name} is ${this.age} years old.`;
+  }
+}
+```
+
+---
+
+### **118. API calls in constructor vs `ngOnInit`**
+
+- **Constructor**: Called when the component is instantiated. It should be used to set up dependencies, but not for API calls.
+- **ngOnInit**: A lifecycle hook where initialization logic is best placed, including API calls.
+
+#### Example:
+```typescript
+// Use ngOnInit for API calls
+constructor(private http: HttpClient) {}
+
+ngOnInit() {
+  this.http.get('/api/data').subscribe(response => console.log(response));
+}
+```
+
+---
+
+### **119. Query parameters in routes**
+
+Query parameters can be appended to routes to pass data without altering the component's path.
+
+#### Example:
+```typescript
+// Setting query params in Component A
+this.router.navigate(['/component-b'], { queryParams: { page: 1, sort: 'name' } });
+
+// Reading query params in Component B
+import { ActivatedRoute } from '@angular/router';
+
+constructor(private route: ActivatedRoute) {}
+
+ngOnInit() {
+  this.route.queryParams.subscribe(params => {
+    console.log(params['page']); // Output: 1
+    console.log(params['sort']); // Output: 'name'
+  });
+}
+```
+
+---
+
+### **120. HTTP client methods in Angular**
+
+Angular provides HTTP client methods for performing API requests:
+- **GET**: To retrieve data.
+- **POST**: To send data to the server.
+- **PUT**: To update existing data.
+- **DELETE**: To delete data on the server.
+
+#### Example:
+```typescript
+import { HttpClient } from '@angular/common/http';
+
+constructor(private http: HttpClient) {}
+
+// GET
+this.http.get('/api/items').subscribe(data => console.log(data));
+
+// POST
+this.http.post('/api/items', { name: 'Item' }).subscribe(data => console.log(data));
+
+// PUT
+this.http.put('/api/items/1', { name: 'Updated Item' }).subscribe(data => console.log(data));
+
+// DELETE
+this.http.delete('/api/items/1').subscribe(data => console.log(data));
+```
+
+---
+
+### **121. Sharing data and nested routing**
+
+**Sharing Data:** Data sharing between components can be achieved via `@Input`/`@Output` for parent-child components or by using services for non-parent-child relationships.
+
+**Nested Routing:** Nested routes, also known as child routes, allow defining sub-routes within a main route.
+
+#### Example:
+```typescript
+// app-routing.module.ts
+const routes: Routes = [
+  {
+    path: 'parent',
+    component: ParentComponent,
+    children: [
+      { path: 'child', component: ChildComponent } // Nested route
+    ]
+  }
+];
+
+// Sharing data with @Input/@Output
+// parent.component.html
+<app-child [data]="parentData" (notify)="onNotify($event)"></app-child>
+
+// child.component.ts
+@Input() data: string;
+@Output() notify = new EventEmitter<string>();
+
+notifyParent() {
+  this.notify.emit('Data from child');
+}
+```
+
+---
+
+### **122. Modules and implementing routing**
+
+Modules in Angular allow structuring an application into logical sections. Routing in each module can be configured to make the module self-contained.
+
+#### Example:
+```typescript
+// app-routing.module.ts
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [
+  { path: 'feature', loadChildren: () => import('./feature/feature.module').then(m => m.FeatureModule) } // Lazy loading a module
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule {}
+```
+
+---
+
+### **123. Difference between `var`, `let`, and `const`**
+
+- **`var`**: Function-scoped, can be re-declared, and is hoisted.
+- **`let`**: Block-scoped, cannot be re-declared in the same scope, and is not hoisted.
+- **`const`**: Block-scoped, cannot be re-assigned, and is used for constants.
+
+#### Example:
+```javascript
+var x = 10; // Function-scoped
+let y = 20; // Block-scoped
+const z = 30; // Block-scoped, cannot be reassigned
+```
+
+---
+
+### **124. Angular 17 features**
+
+Some key features in Angular 17 include:
+
+1. **Enhanced Signals**: Improved reactivity system for efficient state management.
+2. **@if and @for Directives**: Introduces structural directives similar to `ngIf` and `ngFor` but with enhanced functionality.
+3. **Improved Standalone Components**: Further support for standalone components without NgModules.
+4. **Optimized SSR**: Enhanced performance in server-side rendering.
+
+---
+
+### **125. Passing message bodies in GET/POST and using PUT without a body**
+
+- **GET**: Typically, GET requests should not have a body, as it’s against HTTP standards.
+- **POST**: Used for sending data to the server.
+- **PUT**: Commonly used with a body to update resources, but some APIs accept PUT without a body for specific purposes.
+
+#### Example:
+```typescript
+// GET without body
+this.http.get('/api/items').subscribe(response => console.log(response));
+
+// POST with body
+this.http.post('/api/items', { name: 'New Item' }).subscribe(response => console.log(response));
+
+// PUT with body
+this.http.put('/api/items/1', { name: 'Updated Item' }).subscribe(response => console.log(response));
+```
+
+---
+
+### **126. Error handling methods in Angular**
+
+Angular provides error handling through `catchError` with RxJS and `HttpInterceptor` for HTTP requests.
+
+#### Example with `catchError`:
+```typescript
+import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
+
+this.http.get('/api/data').pipe(
+  catchError(error => {
+    console.error('Error occurred:', error);
+    return of([]); // Fallback data
+  })
+).subscribe();
+```
+
+#### Example with `HttpInterceptor`:
+```typescript
+import { Injectable } from '@angular/core';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpErrorResponse } from '@angular/common/http';
+import { catchError, throwError } from 'rxjs';
+
+@Injectable()
+export class ErrorInterceptor implements HttpInterceptor {
+  intercept(req: HttpRequest<any>, next: HttpHandler) {
+    return next.handle(req).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('HTTP error:', error);
+        return throwError(error);
+      })
+    );
+  }
+}
+```
+
+---
+
+### **127. Bootstrapping in Angular**
+
+Bootstrapping in Angular is the process of loading and starting the Angular application. The root module (typically `AppModule`) is specified in `main.ts`.
+
+#### Example:
+```typescript
+// main.ts
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { AppModule } from './app/app.module';
+
+platformBrowserDynamic().bootstrapModule(AppModule)
+  .catch(err => console.error(err));
+```
+
+---
+
+### **128. CSS for responsive columns in Bootstrap**
+
+Using Bootstrap’s grid system, columns can be adjusted for different screen sizes.
+
+#### Example:
+```html
+<div class="row">
+  <div class="col-lg-3 col-md-4 col-sm-6">Column 1</div>
+  <div class="col-lg-3 col-md-4 col-sm-6">Column 2</div>
+  <div class="col-lg-3 col-md-4 col-sm-6">Column 3</div>
+</div>
+```
+
+---
+
+### **129. Differences between Bootstrap 5 and 4**
+
+1. **Removed jQuery Dependency**: Bootstrap 5 no longer relies on jQuery.
+2. **New Utility API**: Allows for more customizable utility classes.
+3. **Enhanced Grid System**: Introduced `xxl` breakpoint and changed classes to include `gutter` spacing.
+4. **Forms**: Redesigned form controls for improved styling.
+5. **Drop IE Support**: Bootstrap 5 removed support for Internet Explorer.
+
+---
+
+### **130. Using a template reference variable in Angular**
+
+Template reference variables are used to reference DOM elements or Angular components.
+
+#### Example:
+```html
+<!-- HTML -->
+<input #myInput type="text">
+<button (click)="logValue(myInput.value)">Log Value</button>
+
+// Component.ts
+logValue(value: string) {
+  console.log(value); // Logs the value of the input field
+}
+```
+---
+
+### **131. Creating a custom directive to change element styles**
+
+A custom directive can be created to dynamically change the style of an element in Angular. Directives are used to extend the behavior of elements in the DOM.
+
+#### Example:
+```typescript
+// highlight.directive.ts
+import { Directive, ElementRef, Renderer2, HostListener } from '@angular/core';
+
+@Directive({
+  selector: '[appHighlight]'
+})
+export class HighlightDirective {
+  constructor(private el: ElementRef, private renderer: Renderer2) {}
+
+  @HostListener('mouseenter') onMouseEnter() {
+    this.renderer.setStyle(this.el.nativeElement, 'color', 'blue');
+  }
+
+  @HostListener('mouseleave') onMouseLeave() {
+    this.renderer.removeStyle(this.el.nativeElement, 'color');
+  }
+}
+```
+
+Usage:
+```html
+<p appHighlight>Hover over this text to see the highlight effect.</p>
+```
+
+---
+
+### **132. Routing in Angular**
+
+Angular’s Router module enables navigation among views or components. It is configured in the `app-routing.module.ts`.
+
+#### Example:
+```typescript
+// app-routing.module.ts
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { HomeComponent } from './home/home.component';
+import { AboutComponent } from './about/about.component';
+
+const routes: Routes = [
+  { path: 'home', component: HomeComponent },
+  { path: 'about', component: AboutComponent },
+  { path: '', redirectTo: '/home', pathMatch: 'full' }
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule {}
+```
+
+---
+
+### **133. Security management in Angular**
+
+Security management in Angular includes several techniques:
+
+1. **Cross-Site Scripting (XSS) Protection**: Angular automatically escapes data binding expressions to prevent XSS.
+2. **Route Guards**: Guards (e.g., `AuthGuard`) protect routes and ensure only authorized users can access certain routes.
+3. **HTTP Interceptors**: Interceptors can add tokens to requests for secure API communication.
+4. **Content Security Policy (CSP)**: Enforces security policies on scripts and styles.
+
+---
+
+### **134. Writing test cases in Angular**
+
+In Angular, `Jasmine` and `Karma` are commonly used for writing and running test cases.
+
+#### Example:
+```typescript
+// sample.component.spec.ts
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { SampleComponent } from './sample.component';
+
+describe('SampleComponent', () => {
+  let component: SampleComponent;
+  let fixture: ComponentFixture<SampleComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [SampleComponent]
+    });
+    fixture = TestBed.createComponent(SampleComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create the component', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should have a title "Hello World"', () => {
+    component.title = 'Hello World';
+    fixture.detectChanges();
+    expect(component.title).toBe('Hello World');
+  });
+});
+```
+
+---
+
+### **135. Program for data communication with an API server**
+
+Data communication with an API server is typically done using Angular’s `HttpClient`.
+
+#### Example:
+```typescript
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ApiService {
+  private apiUrl = 'https://api.example.com/data';
+
+  constructor(private http: HttpClient) {}
+
+  getData(): Observable<any> {
+    return this.http.get<any>(this.apiUrl);
+  }
+}
+```
+
+---
+
+### **136. What is data binding and its types?**
+
+Data binding is the process of binding data between a component and its template. Types include:
+
+1. **Interpolation**: `{{ expression }}` - One-way binding from component to view.
+2. **Property Binding**: `[property]="expression"` - One-way binding from component to element property.
+3. **Event Binding**: `(event)="expression"` - Binds events (like clicks) to methods in the component.
+4. **Two-Way Binding**: `[(ngModel)]="property"` - Allows data flow both ways between the component and the view.
+
+#### Example:
+```html
+<input [(ngModel)]="name" placeholder="Enter your name">
+<p>Your name is: {{ name }}</p>
+```
+
+---
+
+### **137. What is a single-page application (SPA)?**
+
+A Single-Page Application (SPA) loads only a single HTML page and dynamically updates it as the user interacts with the app. Angular is commonly used to develop SPAs, allowing faster interactions by avoiding full page reloads.
+
+---
+
+### **138. Passing entire HTML elements to TypeScript**
+
+To access a full HTML element in TypeScript, you can use a template reference variable and `@ViewChild`.
+
+#### Example:
+```html
+<input #myInput type="text">
+<button (click)="logInputValue()">Log Input Value</button>
+```
+
+```typescript
+import { ViewChild, ElementRef } from '@angular/core';
+
+export class AppComponent {
+  @ViewChild('myInput') myInput!: ElementRef;
+
+  logInputValue() {
+    console.log(this.myInput.nativeElement.value);
+  }
+}
+```
+
+---
+
+### **139. Lifecycle hook called when a checkbox is checked**
+
+When a checkbox is checked or its value changes, Angular does not call a specific lifecycle hook for that change directly. However, you can use the `ngOnChanges` lifecycle hook if the checkbox value is bound to an `@Input` property.
+
+#### Example:
+```typescript
+@Input() isChecked!: boolean;
+
+ngOnChanges(changes: SimpleChanges) {
+  if (changes['isChecked']) {
+    console.log('Checkbox value changed:', this.isChecked);
+  }
+}
+```
+
+---
+
+### **140. Reversing a string and finding duplicate characters**
+
+To reverse a string and find duplicate characters, we can use JavaScript’s `split`, `reverse`, and `join` methods along with a loop to identify duplicates.
+
+#### Example:
+```javascript
+function reverseString(str) {
+  return str.split('').reverse().join('');
+}
+
+function findDuplicates(str) {
+  const charMap = {};
+  const duplicates = [];
+
+  for (const char of str) {
+    if (charMap[char]) {
+      if (!duplicates.includes(char)) {
+        duplicates.push(char);
+      }
+    } else {
+      charMap[char] = 1;
+    }
+  }
+
+  return duplicates;
+}
+
+const originalStr = 'NAVIN';
+console.log('Reversed String:', reverseString(originalStr));
+console.log('Duplicate Characters:', findDuplicates(originalStr));
+```
+
+---
+
+### **141. Configuring Bootstrap with Angular**
+
+To configure Bootstrap in an Angular project:
+
+1. **Install Bootstrap** using npm:
+   ```bash
+   npm install bootstrap
+   ```
+
+2. **Include Bootstrap in `angular.json`**:
+   ```json
+   "styles": [
+     "node_modules/bootstrap/dist/css/bootstrap.min.css",
+     "src/styles.css"
+   ],
+   "scripts": [
+     "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+   ]
+   ```
+
+3. **Use Bootstrap classes** directly in your Angular components:
+   ```html
+   <button class="btn btn-primary">Primary Button</button>
+   ```
+
+---
+
+### **142. Encryption methods used in Angular**
+
+Encryption methods in Angular are typically used to secure sensitive data before sending it to a backend server.
+
+1. **AES Encryption** with `crypto-js`:
+   ```bash
+   npm install crypto-js
+   ```
+
+   #### Example:
+   ```typescript
+   import * as CryptoJS from 'crypto-js';
+
+   const key = CryptoJS.enc.Utf8.parse('your-encryption-key');
+   const encryptedData = CryptoJS.AES.encrypt('Your Data', key).toString();
+   const decryptedData = CryptoJS.AES.decrypt(encryptedData, key).toString(CryptoJS.enc.Utf8);
+   ```
+
+2. **JWT (JSON Web Tokens)**: JWTs are commonly used to handle user authentication in Angular applications.
+
+---
+
+### **143. Making HTTP requests using services**
+
+In Angular, HTTP requests are handled using the `HttpClient` service.
+
+#### Example:
+```typescript
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ApiService {
+  private apiUrl = 'https://api.example.com/data';
+
+  constructor(private http: HttpClient) {}
+
+  getData(): Observable<any> {
+    return this.http.get<any>(this.apiUrl);
+  }
+
+  postData(data: any): Observable<any> {
+    return this.http.post<any>(this.apiUrl, data);
+  }
+}
+```
+
+---
+
+### **144. Difference between `switchMap` and `mergeMap`**
+
+Both `switchMap` and `mergeMap` are RxJS operators used to transform observable streams, but they behave differently:
+
+- **`switchMap`**: Cancels any previous requests if a new one is made. Useful when you need only the latest result (e.g., search inputs).
+- **`mergeMap`**: Processes all requests simultaneously without canceling any. Useful for concurrent requests.
+
+#### Example:
+```typescript
+import { of } from 'rxjs';
+import { delay, mergeMap, switchMap } from 'rxjs/operators';
+
+of('A', 'B')
+  .pipe(switchMap(x => of(`SwitchMap: ${x}`).pipe(delay(1000))))
+  .subscribe(console.log);
+
+of('A', 'B')
+  .pipe(mergeMap(x => of(`MergeMap: ${x}`).pipe(delay(1000))))
+  .subscribe(console.log);
+```
+
+---
+
+### **145. Adding a search feature with debounce time**
+
+Debouncing can be implemented using RxJS operators like `debounceTime` to wait until a specified time has passed without additional keystrokes.
+
+#### Example:
+```typescript
+import { Component } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { debounceTime } from 'rxjs/operators';
+
+@Component({
+  selector: 'app-search',
+  template: `<input [formControl]="searchControl" placeholder="Search...">`
+})
+export class SearchComponent {
+  searchControl = new FormControl();
+
+  constructor() {
+    this.searchControl.valueChanges.pipe(debounceTime(300)).subscribe((searchTerm) => {
+      console.log('Search term:', searchTerm);
+      // Call API or perform search logic here
+    });
+  }
+}
+```
+
+---
+
+### **146. Binding API data to form inputs using template-driven and reactive forms**
+
+#### Template-Driven Form:
+```html
+<!-- app.component.html -->
+<form #myForm="ngForm">
+  <input [(ngModel)]="user.name" name="name" />
+</form>
+```
+
+#### Reactive Form:
+```typescript
+import { FormBuilder, FormGroup } from '@angular/forms';
+
+export class AppComponent {
+  form: FormGroup;
+
+  constructor(private fb: FormBuilder) {
+    this.form = this.fb.group({
+      name: ['']
+    });
+  }
+
+  loadDataFromApi() {
+    // Assume API data is { name: 'John Doe' }
+    this.form.patchValue({ name: 'John Doe' });
+  }
+}
+```
+
+---
+
+### **147. Adding a max validator to reactive forms**
+
+Angular provides built-in validators, including `max` and `min`.
+
+#### Example:
+```typescript
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+@Component({
+  selector: 'app-form',
+  template: `<form [formGroup]="form">
+               <input formControlName="age" placeholder="Age (max 100)">
+             </form>`
+})
+export class FormComponent {
+  form: FormGroup;
+
+  constructor(private fb: FormBuilder) {
+    this.form = this.fb.group({
+      age: ['', [Validators.max(100)]]
+    });
+  }
+}
+```
+
+---
+
+### **148. Working with NgRx**
+
+NgRx is a state management library for Angular applications, often used to manage complex application states in a predictable way.
+
+#### Key NgRx Concepts:
+1. **Actions**: Represent events (e.g., user login).
+2. **Reducers**: Define how the state changes in response to actions.
+3. **Selectors**: Retrieve specific data from the state.
+4. **Effects**: Handle side effects like HTTP requests.
+
+---
+
+### **149. Centering a div**
+
+There are several ways to center a div in CSS.
+
+#### Using Flexbox:
+```css
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+```
+
+#### HTML:
+```html
+<div class="center">
+  <p>Centered Content</p>
+</div>
+```
+
+---
+
+### **150. Unit testing an HTTP service**
+
+Testing an HTTP service typically involves using `HttpClientTestingModule` to mock HTTP requests.
+
+#### Example:
+```typescript
+// api.service.spec.ts
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { ApiService } from './api.service';
+
+describe('ApiService', () => {
+  let service: ApiService;
+  let httpMock: HttpTestingController;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [ApiService]
+    });
+    service = TestBed.inject(ApiService);
+    httpMock = TestBed.inject(HttpTestingController);
+  });
+
+  it('should fetch data successfully', () => {
+    const mockData = { name: 'John Doe' };
+
+    service.getData().subscribe(data => {
+      expect(data).toEqual(mockData);
+    });
+
+    const req = httpMock.expectOne('https://api.example.com/data');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockData);
+  });
+
+  afterEach(() => {
+    httpMock.verify();
+  });
+});
+```
+
+---
+
+
+
+

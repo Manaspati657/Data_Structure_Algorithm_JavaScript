@@ -20,11 +20,9 @@
 18. Angular project workflow: is a service singleton or multiton?
 19. Adding a new element to the 3rd position of an existing array.
 20. Difference between `splice` and `slice`.
-
 21. Examples of semantic and inline elements.
 22. Difference between promises and observables.
 23. Difference between BehaviorSubject and Subject.
-
 24. Template reference variables in Angular.
 25. Angular lifecycle hooks and their calling sequence.
 26. Detecting previous and latest value changes using lifecycle hooks.
@@ -35,7 +33,6 @@
 31. Lifecycle hooks in Angular and their purpose.
 32. Managing routing in Angular.
 33. Purpose of `git stash`.
-
 34. Passing data between parent and child components.
 35. What is a standalone component?
 36. Lazy loading in standalone components.
@@ -47,13 +44,15 @@
 42. Working with RTL (Right-to-Left) applications.
 43. Translating an Angular application into multiple languages.
 44. Deploying an Angular application.
-
 45. Displaying different environments like UAT and Development.
 46. Designing an application based on a Figma design.
 47. Usage of `@if` and `@for` in Angular 17.
 48. Services in Angular and their purpose.
 49. HTTP methods and displaying error status messages.
 50. Usage of `ng-template`.
+
+
+
 51. `filter` method and its return type.
 52. Filtering an array by multiples of 6.
 53. New features in Angular 15/16.
@@ -104,6 +103,8 @@
 98. CSS box model.
 99. Displaying data from an API in a table using UI component libraries.
 100. JavaScript code snippets and outputs.
+
+
 101. Sharing data between non-parent-child components.
 102. Difference between Subject and BehaviorSubject.
 103. When to use reactive vs template-driven forms.
@@ -154,6 +155,8 @@
 148. Working with NgRx.
 149. Centering a div.
 150. Unit testing an HTTP service.
+
+
 151. Handling HTTP errors.
 152. Structure and purpose of `index.html` in Angular.
 153. Authentication flow in Angular.

@@ -1,0 +1,1360 @@
+
+---
+
+### 51. **`filter` Method and Its Return Type**
+
+The `filter` method is an array method in JavaScript and TypeScript that creates a new array with all elements that pass a specified test implemented by the provided function. It’s commonly used for filtering out elements based on conditions.
+
+**Syntax:**
+```typescript
+const newArray = array.filter(element => condition);
+```
+
+**Example:**
+```typescript
+const numbers = [1, 2, 3, 4, 5, 6];
+const evenNumbers = numbers.filter(num => num % 2 === 0);
+console.log(evenNumbers); // Output: [2, 4, 6]
+```
+
+**Return Type:**  
+The `filter` method returns a **new array** containing all elements that satisfy the condition, and the original array remains unmodified.
+
+---
+
+### 52. **Filtering an Array by Multiples of 6**
+
+To filter an array and retrieve only multiples of 6, use the `filter` method with a condition that checks if each element is divisible by 6.
+
+**Example:**
+```typescript
+const numbers = [6, 12, 15, 18, 21, 30];
+const multiplesOfSix = numbers.filter(num => num % 6 === 0);
+console.log(multiplesOfSix); // Output: [6, 12, 18, 30]
+```
+
+**Explanation:**  
+The condition `num % 6 === 0` checks if each element in `numbers` is a multiple of 6, resulting in a new array containing only those elements.
+
+---
+
+### 53. **New Features in Angular 15/16**
+
+Angular 15 and 16 introduced several new features and improvements to enhance performance, developer experience, and functionality.
+
+**Angular 15:**
+1. **Standalone Components**: Allows components, pipes, and directives to be created as standalone, reducing the need for NgModules.
+2. **Improved Router**: Supports tree-shakable standalone APIs and improved lazy-loading syntax.
+3. **Directive Composition API**: Simplifies reusability of directives.
+4. **Enhanced Forms**: Improvements to `ReactiveForms` API with streamlined validation and better error handling.
+
+**Angular 16:**
+1. **Signals API**: Offers a reactive approach to state management similar to RxJS but native to Angular.
+2. **Server-Side Rendering (SSR)**: Improved SSR capabilities with reduced server-side overhead.
+3. **Better Dependency Injection**: Enhanced DI features for working with dependencies more flexibly.
+4. **Control Flow Syntax**: New `@if` and `@for` directives simplify conditionals and loops in templates.
+
+**Example (Standalone Component in Angular 15):**
+```typescript
+import { Component } from '@angular/core';
+
+@Component({
+  standalone: true,
+  selector: 'app-standalone',
+  template: '<p>This is a standalone component!</p>'
+})
+export class StandaloneComponent {}
+```
+
+---
+
+### 54. **Communication from Child to Parent Component Using `ViewChild`**
+
+The `ViewChild` decorator allows a parent component to access properties and methods of a child component. This is useful for communicating data or triggering methods in the child from the parent.
+
+**Example:**
+
+1. **Child Component** (`child.component.ts`):
+   ```typescript
+   import { Component, Output, EventEmitter } from '@angular/core';
+
+   @Component({
+     selector: 'app-child',
+     template: `<button (click)="sendMessage()">Send Message</button>`
+   })
+   export class ChildComponent {
+     message = 'Hello from Child!';
+     @Output() messageEvent = new EventEmitter<string>();
+
+     sendMessage() {
+       this.messageEvent.emit(this.message);
+     }
+   }
+   ```
+
+2. **Parent Component** (`parent.component.ts`):
+   ```typescript
+   import { Component, ViewChild } from '@angular/core';
+   import { ChildComponent } from './child.component';
+
+   @Component({
+     selector: 'app-parent',
+     template: `<app-child (messageEvent)="receiveMessage($event)"></app-child><p>{{ message }}</p>`
+   })
+   export class ParentComponent {
+     message: string;
+
+     receiveMessage($event: string) {
+       this.message = $event;
+     }
+   }
+   ```
+
+**Explanation:**  
+In this example, the parent component listens to the child component’s `messageEvent` to receive data. This setup allows direct communication from child to parent using `@Output` and EventEmitter.
+
+---
+
+### 55. **What is Lazy Loading?**
+
+Lazy loading is a technique that delays the loading of a module or component until it’s required. This optimizes performance, as only the necessary modules load initially, reducing the initial bundle size.
+
+**Example: Lazy Loading a Module**
+1. Define a route with lazy loading:
+   ```typescript
+   const routes: Routes = [
+     { path: 'feature', loadChildren: () => import('./feature/feature.module').then(m => m.FeatureModule) }
+   ];
+   ```
+
+2. In `app-routing.module.ts`, Angular only loads the `FeatureModule` when the `/feature` route is accessed.
+
+**Explanation:**  
+Lazy loading is especially useful for large applications as it helps improve load times and reduces the initial load on users.
+
+---
+
+### 56. **Server-Side Rendering in Angular**
+
+Server-side rendering (SSR) involves rendering Angular applications on the server before they are sent to the client. This improves SEO and initial load performance.
+
+1. **Set up SSR**:
+   Use `@angular/platform-server` to add SSR to your Angular app.
+   ```bash
+   ng add @nguniversal/express-engine
+   ```
+
+2. **Build for SSR**:
+   ```bash
+   npm run build:ssr
+   ```
+
+3. **Serve with SSR**:
+   ```bash
+   npm run serve:ssr
+   ```
+
+**Explanation:**  
+SSR renders the application on the server, sending pre-rendered HTML to the client, which reduces time to interactive and benefits SEO as the page content is indexed easily by search engines.
+
+---
+
+### 57. **Change Detection Strategy and Its Types**
+
+Angular has two change detection strategies: `Default` and `OnPush`.
+
+1. **Default**: Checks for changes on every data binding, detecting any update in the component and its descendants.
+2. **OnPush**: Only triggers change detection when input properties change, which optimizes performance for complex applications.
+
+**Example: Using `OnPush` Strategy**
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+
+@Component({
+  selector: 'app-my-component',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `<p>My component with OnPush</p>`
+})
+export class MyComponent {}
+```
+
+**Explanation:**  
+`OnPush` strategy is used when you need optimized performance, especially for larger applications with complex data bindings.
+
+---
+
+### 58. **Reason for Using Angular**
+
+Angular is a popular framework for building scalable, maintainable, and feature-rich single-page applications (SPAs). Key reasons include:
+
+1. **Two-way Data Binding**: Syncs the model and view automatically.
+2. **Dependency Injection**: Manages dependencies more efficiently.
+3. **Modular Structure**: Encourages splitting the app into modules, which helps in organization and scalability.
+4. **Comprehensive Tooling**: Offers CLI tools, testing utilities, and debugging features.
+5. **Reactive Programming with RxJS**: Allows handling of async data streams.
+
+**Explanation:**  
+Angular’s structure, tooling, and advanced features make it suitable for large-scale applications and enterprise environments where maintainability, performance, and reusability are critical.
+
+---
+
+### 59. **Data Sharing Between Components and Passing HTML Content**
+
+Data sharing between components can be achieved in several ways:
+1. **@Input / @Output Decorators**: For direct parent-child communication.
+2. **Services**: For sharing data between unrelated components.
+3. **EventEmitter**: Used to emit data from child to parent.
+
+**Example: Passing HTML from Parent to Child**
+1. **Parent Component** (`parent.component.html`):
+   ```html
+   <app-child [content]="htmlContent"></app-child>
+   ```
+   ```typescript
+   htmlContent = '<h1>Hello World!</h1>';
+   ```
+
+2. **Child Component** (`child.component.ts`):
+   ```typescript
+   @Input() content!: string;
+   ```
+
+3. **Child Component Template** (`child.component.html`):
+   ```html
+   <div [innerHTML]="content"></div>
+   ```
+
+**Explanation:**  
+Using `[innerHTML]` allows passing HTML content safely from parent to child components.
+
+---
+
+### 60. **Improving Angular Performance**
+
+Optimizing Angular performance can be achieved through various strategies:
+
+1. **Lazy Loading Modules**: Only load necessary modules initially, delaying others until required.
+2. **OnPush Change Detection**: Use `ChangeDetectionStrategy.OnPush` in components to reduce the change detection cycle frequency.
+3. **Use `trackBy` in `*ngFor`**: Prevents Angular from re-rendering the DOM elements unnecessarily.
+4. **Ahead-of-Time (AOT) Compilation**: Reduces the time spent by the browser to render the app by pre-compiling templates.
+5. **Optimize CSS and JS**: Remove unused CSS/JS, and use tree shaking to keep only the necessary code.
+6. **Server-Side Rendering (SSR)**: Enhances load speed and improves SEO.
+7. **Minimize Use of External Libraries**: Keep dependencies to a minimum to avoid larger bundle sizes.
+
+**Example using `OnPush` and `trackBy`**:
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+
+@Component({
+  selector: 'app-item-list',
+  template: `<div *ngFor="let item of items; trackBy: trackByFn">{{ item.name }}</div>`,
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class ItemListComponent {
+  items = [{ id: 1, name: 'Item 1' }, { id: 2, name: 'Item 2' }];
+  
+  trackByFn(index: number, item: any) {
+    return item.id; // unique identifier
+  }
+}
+```
+
+---
+
+### 61. **Example of `ngOnDestroy`**
+
+The `ngOnDestroy` lifecycle hook is used to clean up any resources (like subscriptions or event listeners) that were set up in the component. It is called right before the component is destroyed.
+
+**Example:**
+```typescript
+import { Component, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { DataService } from './data.service';
+
+@Component({
+  selector: 'app-sample',
+  template: `<p>Sample Component</p>`
+})
+export class SampleComponent implements OnDestroy {
+  private subscription: Subscription;
+
+  constructor(private dataService: DataService) {
+    this.subscription = this.dataService.getData().subscribe(data => {
+      console.log(data);
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe(); // Clean up subscription
+  }
+}
+```
+
+**Explanation:**  
+`ngOnDestroy` unsubscribes from the `dataService` subscription to prevent memory leaks.
+
+---
+
+### 62. **Methods for Deep Copying an Object Other than JSON Methods**
+
+While JSON serialization (`JSON.stringify` and `JSON.parse`) is a common deep copy method, it has limitations (e.g., it can’t handle functions). Here are alternative ways to create deep copies:
+
+1. **Lodash `cloneDeep`**:
+   ```typescript
+   import _ from 'lodash';
+   const deepCopy = _.cloneDeep(originalObject);
+   ```
+
+2. **Structured Cloning**:
+   ```typescript
+   const deepCopy = structuredClone(originalObject);
+   ```
+
+3. **Recursive Function**:
+   ```typescript
+   function deepClone(obj) {
+     if (obj === null || typeof obj !== 'object') return obj;
+     const copy = Array.isArray(obj) ? [] : {};
+     for (let key in obj) {
+       copy[key] = deepClone(obj[key]);
+     }
+     return copy;
+   }
+   const deepCopy = deepClone(originalObject);
+   ```
+
+---
+
+### 63. **State Management in Angular**
+
+State management in Angular can be handled using various methods. Here are the most common options:
+
+1. **Services with RxJS**: Manage state in a service, using `BehaviorSubject` or `ReplaySubject` to share state across components.
+2. **NgRx**: A Redux-inspired library for managing state in Angular applications.
+3. **Signals (Angular 16)**: Provides a reactive way of tracking and updating state within Angular.
+
+**Example with NgRx:**
+```typescript
+// Define Actions
+export const increment = createAction('[Counter Component] Increment');
+export const decrement = createAction('[Counter Component] Decrement');
+
+// Define Reducer
+export const counterReducer = createReducer(0,
+  on(increment, state => state + 1),
+  on(decrement, state => state - 1)
+);
+```
+
+**Explanation:**  
+NgRx enables predictable state management through actions, reducers, and effects, helping with state consistency and debugging.
+
+---
+
+### 64. **Sending Parameters Through Angular Router**
+
+To send parameters via Angular Router, use the `navigate` method and pass parameters as part of the route.
+
+**Example:**
+```typescript
+import { Router } from '@angular/router';
+
+@Component({ ... })
+export class SampleComponent {
+  constructor(private router: Router) {}
+
+  goToDetails(id: number) {
+    this.router.navigate(['/details', id]);
+  }
+}
+```
+
+In the `details` component, retrieve the parameter:
+```typescript
+import { ActivatedRoute } from '@angular/router';
+
+@Component({ ... })
+export class DetailsComponent {
+  constructor(private route: ActivatedRoute) {
+    this.route.params.subscribe(params => {
+      console.log(params['id']); // Retrieve the `id` parameter
+    });
+  }
+}
+```
+
+---
+
+### 65. **Error Handling in Angular**
+
+Angular provides several ways to handle errors, including:
+
+1. **Using `catchError` with RxJS in HTTP calls**:
+   ```typescript
+   import { catchError } from 'rxjs/operators';
+
+   this.http.get('url').pipe(
+     catchError(error => {
+       console.error('Error:', error);
+       return throwError(() => new Error('Something went wrong!'));
+     })
+   ).subscribe();
+   ```
+
+2. **HTTP Interceptor**: Intercepts HTTP requests and responses to handle errors globally.
+
+3. **Global Error Handler**: Custom error handling service using `ErrorHandler`.
+
+---
+
+### 66. **HTTP Interceptor Example with Token**
+
+An HTTP Interceptor can add an authorization token to each HTTP request.
+
+**Example:**
+```typescript
+import { Injectable } from '@angular/core';
+import { HttpInterceptor, HttpRequest, HttpHandler } from '@angular/common/http';
+
+@Injectable()
+export class AuthInterceptor implements HttpInterceptor {
+  intercept(req: HttpRequest<any>, next: HttpHandler) {
+    const token = 'your-auth-token';
+    const authReq = req.clone({
+      headers: req.headers.set('Authorization', `Bearer ${token}`)
+    });
+    return next.handle(authReq);
+  }
+}
+```
+
+**Explanation:**  
+The `AuthInterceptor` clones the original request and adds an `Authorization` header with the token before passing it to the next handler.
+
+---
+
+### 67. **Creating a Custom Pipe in Angular Universal**
+
+A custom pipe in Angular Universal is created the same way as in any Angular project. This example demonstrates a simple capitalization pipe.
+
+**Example:**
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({ name: 'capitalize' })
+export class CapitalizePipe implements PipeTransform {
+  transform(value: string): string {
+    return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+  }
+}
+```
+
+**Explanation:**  
+To use this in Angular Universal, make sure it’s part of the shared module or imported in the `app.module.ts` file so it works both server-side and client-side.
+
+---
+
+### 68. **Counting Occurrences of the Most Frequent Numbers in an Array (JS Coding Question)**
+
+To find the number that occurs most frequently and count its occurrences:
+
+**Example:**
+```javascript
+function mostFrequent(arr) {
+  const countMap = arr.reduce((acc, num) => {
+    acc[num] = (acc[num] || 0) + 1;
+    return acc;
+  }, {});
+  let maxCount = 0;
+  let mostFrequentNum;
+
+  for (const [num, count] of Object.entries(countMap)) {
+    if (count > maxCount) {
+      maxCount = count;
+      mostFrequentNum = num;
+    }
+  }
+
+  return { mostFrequentNum, maxCount };
+}
+
+console.log(mostFrequent([1, 3, 1, 3, 2, 1])); // Output: { mostFrequentNum: '1', maxCount: 3 }
+```
+
+**Explanation:**  
+This function uses a frequency map to count occurrences and finds the number with the highest count.
+
+---
+
+### 69. **New HTML Tags in Angular 15**
+
+Angular 15 introduced support for several new HTML tags to keep up with modern standards and improve layout control in web applications:
+
+1. **`<dialog>`**: For creating native modal dialogs.
+   ```html
+   <dialog open>Welcome to Angular!</dialog>
+   ```
+
+2. **`<template>` and `<slot>`**: Useful for creating templates and slots for content projection.
+
+**Example**:
+```html
+<dialog open>Welcome!</dialog>
+```
+
+**Explanation:**  
+These tags, especially `<dialog>`, enable a more seamless creation of modals and dialog boxes directly with native HTML.
+
+---
+
+### 70. **RxJS and RxJS Operators**
+
+RxJS (Reactive Extensions for JavaScript) is a library for reactive programming using Observables. Angular relies on RxJS for handling asynchronous data streams, like HTTP requests, with features like error handling, retries, and transformation.
+
+**Common RxJS Operators**:
+
+- **`map`**: Transforms each emitted value.
+  ```typescript
+  of(1, 2, 3).pipe(map(x => x * 2)).subscribe(console.log); // Outputs: 2, 4, 6
+  ```
+- **`filter`**: Filters values based on a condition.
+  ```typescript
+  of(1, 2, 3, 4).pipe(filter(x => x % 2 === 0)).subscribe(console.log); // Outputs: 2, 4
+  ```
+- **`switchMap`**: Cancels the previous observable when a new value is emitted.
+  ```typescript
+  this.searchInput.pipe(switchMap(query => this.searchService.search(query)));
+  ```
+- **`mergeMap`**: Runs multiple Observables simultaneously.
+- **`debounceTime`**: Delays emitted values by a specified time.
+
+RxJS provides powerful operators to manipulate data streams, making it essential for complex asynchronous workflows in Angular.
+
+---
+
+### 71. **TypeScript Features in Angular**
+
+TypeScript enhances Angular development by offering strong typing, classes, and modern JavaScript features, improving code quality and readability.
+
+- **Static Typing**: Type annotations (`string`, `number`, `boolean`, etc.) prevent runtime errors.
+- **Interfaces**: Define structure for objects.
+  ```typescript
+  interface User { name: string; age: number; }
+  ```
+- **Classes and Inheritance**: Classes can extend other classes, supporting object-oriented programming.
+- **Access Modifiers**: Control visibility of class members (`public`, `private`, `protected`).
+- **Decorators**: Angular uses decorators like `@Component` and `@Injectable` for metadata and dependency injection.
+
+**Example**:
+```typescript
+class User {
+  constructor(public name: string, private age: number) {}
+}
+```
+
+TypeScript brings modern development features and strict typing, ensuring better code quality in Angular.
+
+---
+
+### 72. **Difference between Directives and Components**
+
+Directives and components are core building blocks in Angular, but they serve different purposes:
+
+- **Component**: A directive with its own view. It controls a part of the UI.
+  ```typescript
+  @Component({
+    selector: 'app-example',
+    template: `<p>Example Component</p>`
+  })
+  export class ExampleComponent {}
+  ```
+
+- **Directive**: Adds behavior to elements without templates. There are three types: Structural, Attribute, and Custom Directives.
+  ```typescript
+  @Directive({
+    selector: '[appHighlight]'
+  })
+  export class HighlightDirective {
+    constructor(private el: ElementRef) {
+      this.el.nativeElement.style.backgroundColor = 'yellow';
+    }
+  }
+  ```
+
+**Difference**: Components have templates and define sections of the UI, while directives enhance existing elements without defining their own view.
+
+---
+
+### 73. **Usage of Pipes in Angular**
+
+Pipes transform data for display in templates. Angular provides built-in pipes, and you can create custom pipes.
+
+**Common Pipes**:
+- **`DatePipe`**: Formats dates.
+- **`CurrencyPipe`**: Formats numbers as currency.
+- **`UpperCasePipe` / `LowerCasePipe`**: Transforms text case.
+
+**Example**:
+```html
+<p>{{ 12345.6789 | currency:'USD' }}</p> <!-- $12,345.68 -->
+<p>{{ 'hello world' | uppercase }}</p> <!-- HELLO WORLD -->
+```
+
+Pipes make data presentation more readable by formatting and transforming data directly in templates.
+
+---
+
+### 74. **Basel Tool in Angular**
+
+The Basel tool, also known as Bazel, is a build and test tool used in Angular projects for large-scale applications. It efficiently builds and tests codebases with complex dependencies by caching previously built artifacts.
+
+**Features**:
+- **Parallel and Incremental Builds**: Only rebuilds changed parts.
+- **Cross-Language Builds**: Supports various languages (e.g., JavaScript, Java).
+- **CI Integration**: Works well with Continuous Integration pipelines.
+
+Bazel helps in optimizing build times, especially in large Angular projects with complex dependencies.
+
+---
+
+### 75. **Difference between AOT and JIT**
+
+Angular offers two compilation strategies: Ahead-of-Time (AOT) and Just-in-Time (JIT).
+
+- **AOT (Ahead-of-Time)**: Compiles the code at build time, generating optimized code.
+  - **Pros**: Faster initial load, smaller bundle size, better error handling.
+  - **Cons**: Longer build times.
+  ```typescript
+  // Enable AOT in angular.json
+  "angularCompilerOptions": { "enableIvy": true, "fullTemplateTypeCheck": true }
+  ```
+
+- **JIT (Just-in-Time)**: Compiles the code in the browser at runtime.
+  - **Pros**: Faster builds, allows dynamic templates.
+  - **Cons**: Slower initial load, larger bundle size.
+
+**When to Use**: Use AOT for production (improves performance) and JIT during development (allows faster changes).
+
+---
+
+### 76. **`setTimeout` Usage in JavaScript**
+
+`setTimeout` schedules a function to execute after a specified delay.
+
+**Syntax**:
+```javascript
+setTimeout(() => {
+  console.log('Hello after 2 seconds');
+}, 2000);
+```
+
+**Use Case**: `setTimeout` is useful for delaying actions, animations, or API retries in JavaScript.
+
+---
+
+### 77. **Reactive Forms vs Template-Driven Forms**
+
+Angular supports two types of forms: **Template-Driven** and **Reactive**.
+
+- **Template-Driven Forms**: 
+  - Suitable for simple forms.
+  - Use `FormsModule` and rely on directives (`ngModel`).
+  ```html
+  <input [(ngModel)]="userName" required />
+  ```
+
+- **Reactive Forms**: 
+  - Suitable for complex forms, providing more control.
+  - Use `FormControl`, `FormGroup` in code.
+  ```typescript
+  const userForm = new FormGroup({
+    name: new FormControl(''),
+    age: new FormControl('')
+  });
+  ```
+
+**Difference**: Template-driven forms are easy for basic forms, whereas reactive forms provide more power and flexibility for validation, dynamic form fields, and complex logic.
+
+---
+
+### 78. **How an Angular Application Works**
+
+An Angular application is composed of modules, components, and services that work together to render the UI and manage data.
+
+1. **Modules**: Group related components, directives, and services (`AppModule` is the root module).
+2. **Components**: Define views and contain logic for UI and user interaction.
+3. **Services**: Manage data and logic shared across components.
+4. **Routing**: Manages navigation within the app.
+5. **Data Binding and Directives**: Synchronize data and add behavior to the DOM.
+6. **Dependency Injection**: Provides a flexible and modular approach for managing dependencies.
+
+Angular applications start with `main.ts` which bootstraps `AppModule`, initializing the root component.
+
+---
+
+### 79. **AngularJS vs Angular**
+
+**AngularJS** (Angular 1.x) and **Angular** (Angular 2+ onward) are both frameworks from Google but differ significantly in architecture, performance, and design principles.
+
+| Feature           | AngularJS                  | Angular                       |
+|-------------------|----------------------------|-------------------------------|
+| Architecture      | MVC-based                  | Component-based               |
+| Language          | JavaScript                 | TypeScript                    |
+| Dependency Injection | Limited                  | Built-in Dependency Injection |
+| Performance       | Slower                      | Faster                        |
+| Mobile Support    | Limited                    | Built-in                       |
+| Data Binding      | Two-way only               | Two-way and reactive          |
+
+Angular is a complete rewrite of AngularJS, with a focus on performance, modularity, and mobile-first design, using TypeScript as the primary language for enhanced readability and maintainability.
+
+---
+
+### 80. **What is an AuthGuard?**
+
+An **AuthGuard** in Angular is a route guard that restricts access to certain routes based on authentication or authorization conditions. AuthGuards help ensure that only authorized users can access specific parts of an application, enhancing security.
+
+**Example**:
+1. Create an `AuthGuard` that checks if a user is logged in:
+   ```typescript
+   import { Injectable } from '@angular/core';
+   import { CanActivate, Router } from '@angular/router';
+   import { AuthService } from './auth.service';
+
+   @Injectable({ providedIn: 'root' })
+   export class AuthGuard implements CanActivate {
+     constructor(private authService: AuthService, private router: Router) {}
+
+     canActivate(): boolean {
+       if (this.authService.isLoggedIn()) {
+         return true;
+       } else {
+         this.router.navigate(['/login']);
+         return false;
+       }
+     }
+   }
+   ```
+
+2. Add `AuthGuard` to the route configuration:
+   ```typescript
+   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] }
+   ```
+
+AuthGuards provide a way to manage access control in Angular applications.
+
+---
+
+### 81. **What is Vulnerability Clearance (VAPT)?**
+
+**Vulnerability Assessment and Penetration Testing (VAPT)** is a process that evaluates the security of an application by identifying vulnerabilities and simulating real-world attacks. 
+
+1. **Vulnerability Assessment**: Scans and identifies weaknesses in an application or system.
+2. **Penetration Testing**: Actively exploits vulnerabilities to assess the potential impact.
+
+This process helps developers understand and mitigate security risks, providing a robust application environment.
+
+---
+
+### 82. **Purpose of a Pipe in Angular**
+
+A **pipe** in Angular is a function that transforms data within a template, making it easier to format data for display. Angular provides built-in pipes, like `uppercase`, `date`, and `currency`, and also allows for custom pipe creation.
+
+**Example**:
+```typescript
+// Custom pipe to transform text to uppercase
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({ name: 'customUpperCase' })
+export class CustomUpperCasePipe implements PipeTransform {
+  transform(value: string): string {
+    return value.toUpperCase();
+  }
+}
+```
+
+Usage in a template:
+```html
+<p>{{ 'hello' | customUpperCase }}</p> <!-- Outputs: HELLO -->
+```
+
+Pipes enhance data presentation, making it easier to apply transformations directly in templates.
+
+---
+
+### 83. **Purpose of `Promise.all`**
+
+`Promise.all` takes an array of promises and returns a single promise that resolves when all promises have resolved, or rejects if any promise fails. This is useful for running multiple asynchronous tasks concurrently.
+
+**Example**:
+```javascript
+const fetchData = () => fetch('/api/data');
+const fetchUser = () => fetch('/api/user');
+
+Promise.all([fetchData(), fetchUser()])
+  .then(([dataResponse, userResponse]) => {
+    // Process both responses
+  })
+  .catch(error => {
+    console.error('Error in one of the promises:', error);
+  });
+```
+
+`Promise.all` is helpful when you need multiple asynchronous calls to complete before proceeding.
+
+---
+
+### 84. **Service Injection in Angular**
+
+Service injection in Angular is a way to manage and use services through **Dependency Injection (DI)**. By defining services with `@Injectable` and injecting them into components or other services, Angular can automatically manage instances.
+
+**Example**:
+1. Create a service:
+   ```typescript
+   @Injectable({ providedIn: 'root' })
+   export class DataService {
+     getData() { return 'Service data'; }
+   }
+   ```
+
+2. Inject and use the service in a component:
+   ```typescript
+   import { Component } from '@angular/core';
+   import { DataService } from './data.service';
+
+   @Component({ selector: 'app-example', template: `<p>{{ data }}</p>` })
+   export class ExampleComponent {
+     data: string;
+     constructor(private dataService: DataService) {
+       this.data = this.dataService.getData();
+     }
+   }
+   ```
+
+Service injection promotes code reusability and modularity by providing shared data and logic across the application.
+
+---
+
+### 85. **Architecture Used in Angular**
+
+Angular applications follow a **Component-Based Architecture** where the application is built as a hierarchy of components. Key architectural elements include:
+
+1. **Components**: Building blocks of the UI.
+2. **Modules**: Organize and group components, services, and other code (root module: `AppModule`).
+3. **Services**: Provide shared logic and data handling.
+4. **Dependency Injection (DI)**: Manages instances of services.
+5. **Routing**: Manages navigation between views.
+6. **Pipes**: Transform data in templates.
+
+This architecture enables scalability, reusability, and a clean separation of concerns within the Angular application.
+
+---
+
+### 86. **User Authorization in an Application**
+
+User authorization is a security process that controls user access based on roles or permissions. In Angular, user authorization can be implemented using route guards, services, and token-based authentication.
+
+**Example**:
+1. Define roles in a service:
+   ```typescript
+   export class AuthService {
+     getRole() { return localStorage.getItem('userRole'); }
+   }
+   ```
+
+2. Use a guard to protect routes based on role:
+   ```typescript
+   canActivate(): boolean {
+     const role = this.authService.getRole();
+     if (role === 'admin') return true;
+     this.router.navigate(['/unauthorized']);
+     return false;
+   }
+   ```
+
+Authorization enhances security by restricting access to resources based on user privileges.
+
+---
+
+### 87. **What is `ngx-translate`?**
+
+`ngx-translate` is a library for internationalization in Angular applications, enabling translation of static and dynamic content into multiple languages.
+
+**Usage**:
+1. Install `ngx-translate`:
+   ```bash
+   npm install @ngx-translate/core @ngx-translate/http-loader
+   ```
+
+2. Set up translations in JSON files, e.g., `en.json`:
+   ```json
+   { "HELLO": "Hello", "WELCOME": "Welcome to our app" }
+   ```
+
+3. Use in component:
+   ```typescript
+   constructor(private translate: TranslateService) {
+     this.translate.setDefaultLang('en');
+   }
+   ```
+
+4. In template:
+   ```html
+   <p>{{ 'HELLO' | translate }}</p> <!-- Displays: Hello -->
+   ```
+
+`ngx-translate` makes it easy to localize content in Angular applications for different languages.
+
+---
+
+### 88. **Data Sharing between Two Components**
+
+Data sharing between components can be achieved using **Input/Output properties**, **Services**, or **State Management** libraries.
+
+**Example (Parent to Child with `@Input`)**:
+1. In parent component:
+   ```typescript
+   <app-child [data]="parentData"></app-child>
+   ```
+
+2. In child component:
+   ```typescript
+   @Input() data: string;
+   ```
+
+**Example (Service for unrelated components)**:
+1. Define a shared service:
+   ```typescript
+   @Injectable({ providedIn: 'root' })
+   export class SharedService {
+     private data = new BehaviorSubject<string>('default');
+     data$ = this.data.asObservable();
+     setData(newData: string) { this.data.next(newData); }
+   }
+   ```
+
+2. Use the service in two components:
+   ```typescript
+   // Component A
+   this.sharedService.setData('some data');
+
+   // Component B
+   this.sharedService.data$.subscribe(data => { this.data = data; });
+   ```
+
+Using services is effective for data sharing across components that are not in a parent-child relationship.
+
+---
+
+### 89. **Difference between Monorepo, Polyrepo, and Microfrontend**
+
+- **Monorepo**: All projects and libraries are in a single repository, allowing code reuse and consistency.
+  - **Pros**: Easier dependency management, consistent tooling.
+  - **Cons**: Can become large and hard to maintain.
+
+- **Polyrepo**: Each project is in its own repository, ideal for independent teams and large applications.
+  - **Pros**: Independent versioning and deployments.
+  - **Cons**: Harder to enforce consistency across projects.
+
+- **Microfrontend**: Application is split into multiple frontends, each handling a specific part of the app. Each microfrontend can be developed and deployed independently.
+  - **Pros**: Independent deployment and scaling.
+  - **Cons**: Complexity in integration and communication between microfrontends.
+
+Choosing between these depends on the project's size, team structure, and the need for independent scaling and deployment.
+
+---
+
+### 90. **Migration of an Angular Application**
+
+Migrating an Angular application involves updating dependencies, ensuring compatibility with new Angular versions, and making code adjustments if necessary. Angular provides the **Angular Update Guide** and `ng update` command to assist in version upgrades.
+
+**Steps**:
+1. **Check Compatibility**: Review the Angular Update Guide ([update.angular.io](https://update.angular.io)) for version-specific changes.
+2. **Update Angular CLI**:
+   ```bash
+   ng update @angular/cli @angular/core
+   ```
+3. **Fix Breaking Changes**: Review any breaking changes, and refactor code if needed.
+4. **Test and Optimize**: Run tests and ensure application stability.
+
+Migration improves application performance and enables new features but may require code adjustments to address deprecated features.
+
+---
+
+### 91. **Managing Environments Like Prod, Staging, and Dev**
+
+Angular provides a built-in way to handle multiple environments using the `src/environments` folder, which includes environment-specific configuration files.
+
+**Example**:
+1. Define environment files, e.g., `environment.ts` for development and `environment.prod.ts` for production.
+2. Configure the `fileReplacements` array in `angular.json`:
+   ```json
+   "fileReplacements": [
+     {
+       "replace": "src/environments/environment.ts",
+       "with": "src/environments/environment.prod.ts"
+     }
+   ]
+   ```
+3. Use `environment` constants in the app:
+   ```typescript
+   import { environment } from '../environments/environment';
+   console.log(environment.apiUrl);
+   ```
+
+Environment management ensures different configurations for different deployment stages, enhancing flexibility and security.
+
+---
+
+### 92. **Libraries Used in Past Projects**
+
+Angular projects often leverage libraries to extend functionality. Common libraries include:
+- **RxJS**: For reactive programming and handling asynchronous events.
+- **NgRx**: For state management.
+- **Angular Material**: For UI components.
+- **ngx-translate**: For internationalization.
+- **Lodash**: For utility functions.
+
+Each library addresses a specific need, enhancing productivity and improving application maintainability.
+
+---
+
+### 93. **Developing an Angular Application from Scratch**
+
+To build an Angular application from scratch, follow these steps:
+
+1. **Set Up Project**:
+   ```bash
+   ng new my-app
+   cd my-app
+   ```
+2. **Define Modules, Components, and Services**:
+   Organize the app into modules, each handling a feature. Create components for UI and services for business logic and data.
+   ```bash
+   ng generate module users
+   ng generate component users/user-list
+   ng generate service users/user
+   ```
+3. **Routing**: Define routes for navigation in `app-routing.module.ts`.
+4. **Add Features**: Build features using reactive forms, HTTP services, and state management as required.
+5. **Styling and Testing**: Use SCSS or CSS for styling, and set up unit and end-to-end tests.
+
+Starting from scratch allows you to structure the app based on project requirements, optimizing it for specific use cases.
+
+---
+
+### 94. **Example of an HTTP Interceptor**
+
+An **HTTP Interceptor** in Angular intercepts HTTP requests and responses, allowing modification of headers or handling errors.
+
+**Example**:
+```typescript
+import { Injectable } from '@angular/core';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+@Injectable()
+export class AuthInterceptor implements HttpInterceptor {
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const authToken = localStorage.getItem('token');
+    const authReq = req.clone({ headers: req.headers.set('Authorization', `Bearer ${authToken}`) });
+    return next.handle(authReq);
+  }
+}
+```
+
+In `app.module.ts`, register the interceptor:
+```typescript
+providers: [
+  { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+]
+```
+
+Interceptors streamline request management, adding headers like tokens across all requests in one place.
+
+---
+
+### 95. **Most Challenging Task Done to Date**
+
+When answering this, discuss a technical or architectural challenge you've faced, such as optimizing a large dataset for better UI performance, implementing complex authentication workflows, or refactoring legacy code. Describe the challenge, your approach, the tools/technologies used, and the impact of your solution on the project.
+
+---
+
+### 96. **How i18n Works in Angular**
+
+Angular's **i18n** provides internationalization support, allowing applications to display content in multiple languages. It uses translation files with `xlf` or `json` formats.
+
+**Steps**:
+1. **Mark Strings for Translation**:
+   ```html
+   <p i18n="meaning|description">Hello, world!</p>
+   ```
+2. **Generate Translation Files**:
+   ```bash
+   ng extract-i18n
+   ```
+3. **Translate Content**: Add translations in files, e.g., `messages.fr.xlf`.
+4. **Build Application for Locale**:
+   ```bash
+   ng serve --configuration=fr
+   ```
+
+Angular’s i18n helps you manage translations and deploy applications in multiple languages.
+
+---
+
+### 97. **Difference Between PUT and POST API Methods**
+
+- **PUT**: Replaces a resource at a specified URL. It’s idempotent, meaning multiple identical requests produce the same result.
+- **POST**: Creates a new resource, and each request may produce a different outcome (e.g., creating multiple records).
+
+**Example**:
+```javascript
+// PUT
+fetch('https://api.example.com/users/1', {
+  method: 'PUT',
+  body: JSON.stringify({ name: 'Updated Name' })
+});
+
+// POST
+fetch('https://api.example.com/users', {
+  method: 'POST',
+  body: JSON.stringify({ name: 'New User' })
+});
+```
+
+Use `PUT` for updates and `POST` for creating new resources.
+
+---
+
+### 98. **CSS Box Model**
+
+The CSS **Box Model** describes how elements are structured in terms of **content**, **padding**, **border**, and **margin**. This model is crucial for layout and spacing in web design.
+
+- **Content**: The actual content area.
+- **Padding**: Space inside the element, between the content and border.
+- **Border**: Surrounds the padding, creating a visible boundary.
+- **Margin**: Space outside the border, between this and other elements.
+
+**Example**:
+```css
+.box {
+  width: 100px;
+  padding: 10px;
+  border: 5px solid black;
+  margin: 15px;
+}
+```
+
+The CSS Box Model helps in controlling the layout and spacing of elements.
+
+---
+
+### 99. **Displaying Data from an API in a Table Using UI Component Libraries**
+
+Using libraries like **Angular Material** or **PrimeNG**, you can display data from an API in a styled table.
+
+**Example** (Using Angular Material):
+1. **Install Angular Material**:
+   ```bash
+   ng add @angular/material
+   ```
+2. **Add the Table Component**:
+   ```typescript
+   import { MatTableDataSource } from '@angular/material/table';
+
+   export class AppComponent {
+     displayedColumns: string[] = ['id', 'name', 'age'];
+     dataSource = new MatTableDataSource();
+
+     constructor(private http: HttpClient) {
+       this.http.get<User[]>('api/users').subscribe(data => this.dataSource.data = data);
+     }
+   }
+   ```
+3. **Template**:
+   ```html
+   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+     <ng-container matColumnDef="id">
+       <th mat-header-cell *matHeaderCellDef> ID </th>
+       <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+     </ng-container>
+     <ng-container matColumnDef="name">
+       <th mat-header-cell *matHeaderCellDef> Name </th>
+       <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+     </ng-container>
+     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+   </table>
+   ```
+
+Libraries like Angular Material provide pre-built styles and components, simplifying UI development for data presentation.
+
+---
+
+### 99. **JavaScript code snippet**
+
+### **Snippet 1: Hoisting**
+```javascript
+console.log(a); // Output?
+var a = 5;
+```
+
+**Explanation**:
+- **Output**: `undefined`
+- **Reason**: In JavaScript, variable declarations using `var` are **hoisted** to the top of their scope but not initialized. So, when `console.log(a)` is executed, `a` is declared but has an initial value of `undefined`.
+
+---
+
+### **Snippet 2: Closure**
+```javascript
+function outer() {
+  let count = 0;
+  return function() {
+    count++;
+    return count;
+  };
+}
+
+const increment = outer();
+console.log(increment()); // Output?
+console.log(increment()); // Output?
+console.log(increment()); // Output?
+```
+
+**Explanation**:
+- **Output**: `1`, `2`, `3`
+- **Reason**: Each call to `increment` increments the `count` variable within the closure created by `outer()`. Since `count` is preserved between calls, it increases with each invocation.
+
+---
+
+### **Snippet 3: `this` Binding**
+```javascript
+const person = {
+  name: "John",
+  greet: function() {
+    return `Hello, ${this.name}`;
+  },
+};
+
+const greet = person.greet;
+console.log(greet()); // Output?
+```
+
+**Explanation**:
+- **Output**: `Hello, undefined`
+- **Reason**: When `greet()` is called outside the `person` object, the context of `this` is lost, defaulting to `undefined` in strict mode (or `window` in non-strict mode). Since `this.name` is `undefined`, it prints `Hello, undefined`.
+
+---
+
+### **Snippet 4: `map`, `filter`, `reduce`**
+```javascript
+const arr = [1, 2, 3, 4, 5];
+const result = arr
+  .filter(num => num % 2 === 0)
+  .map(num => num * 2)
+  .reduce((acc, num) => acc + num, 0);
+
+console.log(result); // Output?
+```
+
+**Explanation**:
+- **Output**: `12`
+- **Reason**:
+  - `filter` selects even numbers: `[2, 4]`
+  - `map` doubles each: `[4, 8]`
+  - `reduce` sums the elements: `4 + 8 = 12`
+
+---
+
+### **Snippet 5: `==` vs `===`**
+```javascript
+console.log(0 == false);  // Output?
+console.log(0 === false); // Output?
+console.log('' == false); // Output?
+console.log('' === false); // Output?
+```
+
+**Explanation**:
+- **Output**:
+  - `0 == false` → `true`
+  - `0 === false` → `false`
+  - `'' == false` → `true`
+  - `'' === false` → `false`
+- **Reason**:
+  - `==` performs **type coercion**, so `0`, `''`, and `false` are considered equal.
+  - `===` checks **strict equality** without type coercion, so different types return `false`.
+
+---
+
+### **Snippet 6: Asynchronous `setTimeout`**
+```javascript
+for (let i = 0; i < 3; i++) {
+  setTimeout(() => console.log(i), 1000);
+}
+```
+
+**Explanation**:
+- **Output**: `0`, `1`, `2` (each logged after a 1-second delay)
+- **Reason**: The `let` keyword creates a new scope for each iteration of the loop, so each `setTimeout` callback captures the correct value of `i` at that time.
+
+---
+
+### **Snippet 7: Array Destructuring**
+```javascript
+const [a, , b] = [1, 2, 3];
+console.log(a, b); // Output?
+```
+
+**Explanation**:
+- **Output**: `1 3`
+- **Reason**: The second element in the array is skipped by leaving a blank space, so `a` gets `1` and `b` gets `3`.
+
+---
+
+### **Snippet 8: Default Parameters**
+```javascript
+function greet(name = "stranger") {
+  return `Hello, ${name}`;
+}
+
+console.log(greet("Alice"));   // Output?
+console.log(greet());          // Output?
+```
+
+**Explanation**:
+- **Output**:
+  - `Hello, Alice`
+  - `Hello, stranger`
+- **Reason**: If `name` is not provided, the default value `"stranger"` is used.
+
+---
+
+### **Snippet 9: Array `push` and `unshift`**
+```javascript
+const arr = [1, 2, 3];
+arr.push(4);
+arr.unshift(0);
+console.log(arr); // Output?
+```
+
+**Explanation**:
+- **Output**: `[0, 1, 2, 3, 4]`
+- **Reason**: `push` adds to the end of the array, while `unshift` adds to the beginning.
+
+---
+
+### **Snippet 10: Object Spread Operator**
+```javascript
+const obj1 = { a: 1, b: 2 };
+const obj2 = { b: 3, c: 4 };
+const merged = { ...obj1, ...obj2 };
+console.log(merged); // Output?
+```
+
+**Explanation**:
+- **Output**: `{ a: 1, b: 3, c: 4 }`
+- **Reason**: The spread operator merges `obj1` and `obj2`. When properties overlap, the latter object’s properties (`obj2`) overwrite the former’s.
+
+---
+
+Let me know if you'd like more examples or explanations for any specific topics!

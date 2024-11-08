@@ -1,0 +1,477 @@
+
+---
+
+### **151. Handling HTTP Errors**
+
+Angular provides the `HttpInterceptor` to handle HTTP errors globally.
+
+#### Example:
+```typescript
+// error.interceptor.ts
+import { Injectable } from '@angular/core';
+import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+
+@Injectable()
+export class ErrorInterceptor implements HttpInterceptor {
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    return next.handle(req).pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMsg = 'An error occurred';
+        if (error.error instanceof ErrorEvent) {
+          errorMsg = `Client-side error: ${error.error.message}`;
+        } else {
+          errorMsg = `Server-side error: ${error.status} - ${error.message}`;
+        }
+        console.error(errorMsg);
+        return throwError(errorMsg);
+      })
+    );
+  }
+}
+```
+
+This interceptor catches errors globally and returns an observable with the error message.
+
+---
+
+### **152. Structure and Purpose of `index.html` in Angular**
+
+The `index.html` file in Angular is the main HTML file that the Angular application loads on startup. It usually includes:
+
+- **App Root**: `<app-root></app-root>`—the root Angular component that gets replaced by Angular's rendered components.
+- **Base URL**: `<base href="/">`—sets the base URL for routing.
+- **Meta Tags**: Often include metadata for SEO and PWA functionality.
+
+#### Example of `index.html`:
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Angular App</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>
+```
+
+---
+
+### **153. Authentication Flow in Angular**
+
+Authentication in Angular typically involves:
+1. **Login Form**: Collect user credentials.
+2. **Auth Service**: Send credentials to the backend for validation.
+3. **Token Storage**: Save the JWT token received from the backend.
+4. **Route Guard**: Use `AuthGuard` to protect routes based on authentication status.
+5. **Interceptor**: Add token to HTTP headers for authenticated requests.
+
+#### Example of Route Guard:
+```typescript
+import { Injectable } from '@angular/core';
+import { CanActivate, Router } from '@angular/router';
+import { AuthService } from './auth.service';
+
+@Injectable({ providedIn: 'root' })
+export class AuthGuard implements CanActivate {
+  constructor(private authService: AuthService, private router: Router) {}
+
+  canActivate(): boolean {
+    if (this.authService.isLoggedIn()) {
+      return true;
+    } else {
+      this.router.navigate(['/login']);
+      return false;
+    }
+  }
+}
+```
+
+---
+
+### **154. Parent-Child Communication Methods**
+
+In Angular, you can share data between parent and child components using:
+1. **@Input()**: Pass data from parent to child.
+2. **@Output() with EventEmitter**: Pass data from child to parent.
+3. **ViewChild**: Access a child component’s properties and methods.
+4. **Service with Observables**: Share data between unrelated components.
+
+#### Example using `@Input` and `@Output`:
+```typescript
+// parent.component.html
+<app-child [parentData]="data" (childEvent)="handleEvent($event)"></app-child>
+
+// child.component.ts
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+
+@Component({
+  selector: 'app-child',
+  template: `<button (click)="sendEvent()">Send to Parent</button>`
+})
+export class ChildComponent {
+  @Input() parentData: string;
+  @Output() childEvent = new EventEmitter<string>();
+
+  sendEvent() {
+    this.childEvent.emit("Data from child");
+  }
+}
+```
+
+---
+
+### **155. Different Types of Data Binding**
+
+Angular supports several types of data binding:
+1. **Interpolation** (`{{ }}`): Binding component data to the view.
+2. **Property Binding** (`[property]`): Binding values to element properties.
+3. **Event Binding** (`(event)`): Binding methods to element events.
+4. **Two-Way Binding** (`[(ngModel)]`): Combining property and event binding.
+
+#### Example:
+```html
+<input [value]="name" (input)="name = $event.target.value">
+<p>Hello, {{ name }}</p>
+```
+
+---
+
+### **156. Angular Lifecycle Hooks for Data Sharing**
+
+Angular lifecycle hooks can help manage data sharing, particularly:
+1. **ngOnInit**: Initialize component data or fetch data from APIs.
+2. **ngOnChanges**: Track changes in input properties.
+3. **ngAfterViewInit**: Access view child elements.
+4. **ngOnDestroy**: Clean up subscriptions.
+
+---
+
+### **157. Differences between CSS and SCSS**
+
+- **CSS**: Basic styling language, limited to simple styling rules.
+- **SCSS**: Superset of CSS, adding features like variables, nesting, mixins, and inheritance for cleaner and more reusable code.
+
+#### Example of SCSS:
+```scss
+$primary-color: blue;
+
+.button {
+  color: $primary-color;
+  &:hover {
+    color: darken($primary-color, 10%);
+  }
+}
+```
+
+---
+
+### **158. Bootstrap Integration in Angular**
+
+To integrate Bootstrap into an Angular application:
+1. **Install Bootstrap**:
+   ```bash
+   npm install bootstrap
+   ```
+2. **Add Bootstrap to `angular.json`**:
+   ```json
+   "styles": ["node_modules/bootstrap/dist/css/bootstrap.min.css"]
+   ```
+
+3. **Use Bootstrap classes** in Angular templates:
+   ```html
+   <button class="btn btn-primary">Primary Button</button>
+   ```
+
+---
+
+### **159. Shared Modules in Angular**
+
+Shared modules in Angular help encapsulate and share common functionality across multiple modules without importing it in every module individually.
+
+#### Example:
+1. **Create a Shared Module**:
+   ```typescript
+   import { NgModule } from '@angular/core';
+   import { CommonModule } from '@angular/common';
+   import { SharedComponent } from './shared.component';
+
+   @NgModule({
+     declarations: [SharedComponent],
+     imports: [CommonModule],
+     exports: [SharedComponent]
+   })
+   export class SharedModule {}
+   ```
+
+2. **Import Shared Module** in other modules:
+   ```typescript
+   import { SharedModule } from './shared/shared.module';
+   ```
+
+---
+
+### **160. Angular Form Arrays**
+
+Form arrays are used in Angular’s reactive forms to manage an array of form controls, often for handling dynamic forms.
+
+#### Example:
+```typescript
+import { Component } from '@angular/core';
+import { FormBuilder, FormArray, FormGroup } from '@angular/forms';
+
+@Component({
+  selector: 'app-form-array',
+  template: `
+    <form [formGroup]="form">
+      <div formArrayName="items">
+        <div *ngFor="let item of items.controls; let i = index">
+          <input [formControlName]="i" placeholder="Item {{ i + 1 }}">
+          <button (click)="removeItem(i)">Remove</button>
+        </div>
+        <button (click)="addItem()">Add Item</button>
+      </div>
+    </form>
+  `
+})
+export class FormArrayComponent {
+  form: FormGroup;
+
+  constructor(private fb: FormBuilder) {
+    this.form = this.fb.group({
+      items: this.fb.array([])
+    });
+  }
+
+  get items() {
+    return this.form.get('items') as FormArray;
+  }
+
+  addItem() {
+    this.items.push(this.fb.control(''));
+  }
+
+  removeItem(index: number) {
+    this.items.removeAt(index);
+  }
+}
+```
+
+---
+
+### **161. Progressive Web Apps (PWAs)**
+
+A Progressive Web App (PWA) is a web application that combines the best features of web and mobile apps. Angular supports PWAs with features like offline functionality, service workers, and faster loading.
+
+To create a PWA in Angular:
+1. **Add Angular PWA package**:
+   ```bash
+   ng add @angular/pwa
+   ```
+2. **Service Worker**: The `@angular/pwa` package automatically registers a service worker, which caches assets and API calls, enabling offline capabilities.
+3. **Manifest File**: Angular generates a `manifest.webmanifest` file that provides app metadata like name, theme color, and icon.
+
+---
+
+### **162. Observables in Angular**
+
+Observables represent asynchronous data streams and are a key concept in Angular for handling asynchronous operations, especially for HTTP requests and reactive programming.
+
+#### Example of Observable:
+```typescript
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class DataService {
+  constructor(private http: HttpClient) {}
+
+  fetchData(): Observable<any> {
+    return this.http.get('https://api.example.com/data');
+  }
+}
+
+// Using Observable in a Component
+import { Component, OnInit } from '@angular/core';
+import { DataService } from './data.service';
+
+@Component({
+  selector: 'app-data',
+  template: `<div *ngIf="data">{{ data }}</div>`
+})
+export class DataComponent implements OnInit {
+  data: any;
+
+  constructor(private dataService: DataService) {}
+
+  ngOnInit() {
+    this.dataService.fetchData().subscribe(response => {
+      this.data = response;
+    });
+  }
+}
+```
+
+---
+
+### **163. API Calling Methods in Angular**
+
+Angular provides the `HttpClient` module for API calls, which can be injected into services to handle HTTP requests.
+
+#### Example of API Call using `HttpClient`:
+```typescript
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ApiService {
+  private baseUrl = 'https://jsonplaceholder.typicode.com';
+
+  constructor(private http: HttpClient) {}
+
+  getPosts(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/posts`);
+  }
+
+  addPost(post: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/posts`, post);
+  }
+}
+```
+
+---
+
+### **164. Angular Lifecycle Hooks and Their Uses**
+
+Angular lifecycle hooks allow developers to respond to changes at specific stages of a component’s lifecycle.
+
+1. **ngOnChanges**: Called when any data-bound property changes.
+2. **ngOnInit**: Called after Angular initializes component data.
+3. **ngDoCheck**: Custom change detection logic.
+4. **ngAfterContentInit**: Runs after content projection.
+5. **ngAfterContentChecked**: Called after every check of projected content.
+6. **ngAfterViewInit**: Called after initializing the component's view.
+7. **ngAfterViewChecked**: Runs after every view check.
+8. **ngOnDestroy**: Clean up before the component is destroyed.
+
+---
+
+### **165. Security Configuration in Angular**
+
+Angular offers various built-in mechanisms to ensure security:
+1. **XSS Protection**: Angular automatically sanitizes templates and HTML inputs to prevent Cross-Site Scripting (XSS) attacks.
+2. **HTTP Interceptors**: Secure API calls by adding authentication tokens.
+3. **Content Security Policy (CSP)**: Use CSP headers to control sources of JavaScript, CSS, and images.
+4. **DomSanitizer**: Bypass security checks when you trust the content (e.g., embedding external videos).
+
+#### Example of HTTP Interceptor for Security:
+```typescript
+import { Injectable } from '@angular/core';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+@Injectable()
+export class AuthInterceptor implements HttpInterceptor {
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const token = 'your-auth-token';
+    const clonedRequest = req.clone({
+      headers: req.headers.set('Authorization', `Bearer ${token}`)
+    });
+    return next.handle(clonedRequest);
+  }
+}
+```
+
+---
+
+### **166. Writing Test Cases in Angular**
+
+Angular supports unit testing with tools like Jasmine and Karma. Unit tests in Angular are often written for components, services, and pipes.
+
+#### Example of a Simple Component Test:
+```typescript
+// my-component.component.ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-my-component',
+  template: `<p>{{ getText() }}</p>`
+})
+export class MyComponent {
+  getText(): string {
+    return 'Hello World';
+  }
+}
+
+// my-component.component.spec.ts
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MyComponent } from './my-component.component';
+
+describe('MyComponent', () => {
+  let component: MyComponent;
+  let fixture: ComponentFixture<MyComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [MyComponent]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(MyComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should return "Hello World"', () => {
+    expect(component.getText()).toBe('Hello World');
+  });
+});
+```
+
+---
+
+### **167. Event Loop -- Key Concepts and Callback Queue Types**
+
+The JavaScript event loop is responsible for handling asynchronous operations. Key concepts include:
+
+1. **Call Stack**: Keeps track of function execution order. Each function call is pushed onto the stack and popped when it completes.
+2. **Web APIs**: Handle async operations like `setTimeout`, `fetch`, and DOM events.
+3. **Callback Queue**: Stores asynchronous callbacks to be processed after the stack clears.
+4. **Microtask Queue**: Prioritized queue for promises and other microtasks, processed before the callback queue.
+
+#### Example:
+```javascript
+console.log('Start');
+
+setTimeout(() => {
+  console.log('setTimeout');
+}, 0);
+
+Promise.resolve().then(() => {
+  console.log('Promise');
+});
+
+console.log('End');
+```
+
+#### Output:
+```
+Start
+End
+Promise
+setTimeout
+```

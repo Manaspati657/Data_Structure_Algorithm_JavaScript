@@ -875,3 +875,497 @@ The `git stash` command is used to save changes that are not yet ready to commit
 **Explanation:**
 - `git stash` temporarily saves your uncommitted changes.
 - `git stash apply` re-applies the changes you stashed.
+
+### 34. **Passing Data Between Parent and Child Components**
+
+In Angular, data can be passed from a parent component to a child component using **@Input()** property binding. The parent binds a value to the child component, and the child component receives that value as an input.
+
+**Example:**
+
+```typescript
+// Parent component
+@Component({
+  selector: 'app-parent',
+  template: `<app-child [childData]="parentData"></app-child>`
+})
+export class ParentComponent {
+  parentData = 'Data from Parent';
+}
+
+// Child component
+@Component({
+  selector: 'app-child',
+  template: `<p>{{ childData }}</p>`
+})
+export class ChildComponent {
+  @Input() childData: string;
+}
+```
+
+**Explanation:**
+- The parent component sends `parentData` to the child using the `@Input()` decorator in the child component.
+- The child component receives the data and displays it in the template.
+
+---
+
+### 35. **What is a Standalone Component?**
+
+A **standalone component** in Angular is a component that is not dependent on Angular modules (`NgModule`). It is self-contained, meaning it has its own dependencies, and can be used independently without being declared in a module. Angular introduced standalone components in version 14.
+
+**Example:**
+
+```typescript
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-standalone',
+  standalone: true,
+  template: `<p>This is a standalone component!</p>`
+})
+export class StandaloneComponent {}
+```
+
+**Explanation:**
+- The `standalone: true` metadata option makes this component independent of any module.
+- Standalone components help reduce boilerplate code in large applications by eliminating the need for modules for simple components.
+
+---
+
+### 36. **Lazy Loading in Standalone Components**
+
+Lazy loading is a technique where the Angular module or component is loaded on demand (when it is needed) rather than at the initial load. In Angular 14+, you can use lazy loading with standalone components via routing.
+
+**Example:**
+
+```typescript
+import { Routes } from '@angular/router';
+import { StandaloneComponent } from './standalone/standalone.component';
+
+const routes: Routes = [
+  {
+    path: 'standalone',
+    loadComponent: () => import('./standalone/standalone.component').then(m => m.StandaloneComponent)
+  }
+];
+```
+
+**Explanation:**
+- The `loadComponent` syntax enables lazy loading of standalone components in routes.
+- When the route is visited, Angular loads the component dynamically, reducing the initial load time.
+
+---
+
+### 37. **Passing Data from Parent to Child Components**
+
+In Angular, passing data from a parent to a child component is done using **@Input()**.
+
+**Example:**
+
+```typescript
+// Parent component
+@Component({
+  selector: 'app-parent',
+  template: `<app-child [childData]="parentData"></app-child>`
+})
+export class ParentComponent {
+  parentData = 'Hello from Parent!';
+}
+
+// Child component
+@Component({
+  selector: 'app-child',
+  template: `<p>{{ childData }}</p>`
+})
+export class ChildComponent {
+  @Input() childData: string;
+}
+```
+
+**Explanation:**
+- The parent binds the value to the child component using property binding `[childData]="parentData"`.
+- The child receives this value with the `@Input()` decorator.
+
+---
+
+### 38. **Signals in Angular**
+
+**Signals** in Angular (introduced in Angular 16) are a way to handle reactive programming and change detection in a more fine-grained manner. They allow you to track state and react to changes in the state. Signals are a more efficient and explicit approach compared to using `Observables` for change detection.
+
+**Example:**
+
+```typescript
+import { signal } from '@angular/core';
+
+const count = signal(0);
+
+const increment = () => count.set(count() + 1);
+```
+
+**Explanation:**
+- `signal` creates a reactive value that you can use to store data.
+- `count.set` updates the value, and any component or service that subscribes to `count` will react to its changes.
+
+---
+
+### 39. **Approaches to Notify State in Angular Besides Signals**
+
+Besides using **Signals** in Angular, you can use other approaches like:
+
+1. **RxJS Observables**: Using `BehaviorSubject`, `Subject`, or `ReplaySubject` to emit changes in state and subscribe to them.
+2. **Service-based State Management**: Services can act as a state container, notifying components about changes.
+3. **NgRx**: A Redux-inspired library for managing state in a reactive way.
+4. **Input/Output Bindings**: Using `@Input()` and `@Output()` to pass data and emit events between components.
+
+---
+
+### 40. **UI Design Libraries Used in Angular**
+
+In Angular applications, several UI design libraries help you build responsive, attractive, and consistent UIs. Some popular ones include:
+
+- **Angular Material**: Offers components based on Material Design principles.
+- **NG Bootstrap**: Angular components based on the Bootstrap framework.
+- **PrimeNG**: A collection of UI components that include grids, forms, and charts.
+- **TailwindCSS**: A utility-first CSS framework for creating custom designs.
+- **Kendo UI**: Provides Angular components for complex UIs like grids, charts, and dashboards.
+
+---
+
+### 41. **Difference Between `ngx-bootstrap` and Bootstrap, Passing Data in Modals**
+
+- **Bootstrap**: A front-end framework for creating responsive websites with pre-designed CSS classes.
+- **`ngx-bootstrap`**: An Angular-specific wrapper for Bootstrap components, providing more Angular-friendly integrations.
+
+**Passing Data in Modals Example using `ngx-bootstrap`:**
+
+```typescript
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+
+@Component({
+  selector: 'app-parent',
+  template: `<button (click)="openModal()">Open Modal</button>`
+})
+export class ParentComponent {
+  constructor(private modalService: BsModalService) {}
+
+  openModal() {
+    const initialState = {
+      data: 'Data from Parent'
+    };
+    this.modalService.show(ChildComponent, { initialState });
+  }
+}
+```
+
+**Explanation:**
+- `ngx-bootstrap` makes it easy to integrate Bootstrap's modals in Angular and pass data into them via `initialState`.
+
+---
+
+### 42. **Working with RTL (Right-to-Left) Applications**
+
+For RTL (Right-to-Left) support in Angular:
+
+1. Set the `dir` attribute to `rtl` in the HTML:
+   ```html
+   <html dir="rtl">
+   ```
+2. You can also use Angular’s `Renderer2` to dynamically toggle between `ltr` and `rtl`.
+
+**Example:**
+```typescript
+import { Renderer2, Inject, ElementRef } from '@angular/core';
+
+@Component({
+  selector: 'app-rtl-toggle',
+  template: `<button (click)="toggleRtl()">Toggle RTL</button>`
+})
+export class RtlToggleComponent {
+  constructor(private renderer: Renderer2, private el: ElementRef) {}
+
+  toggleRtl() {
+    const body = document.body;
+    body.setAttribute('dir', body.getAttribute('dir') === 'rtl' ? 'ltr' : 'rtl');
+  }
+}
+```
+
+---
+
+### 43. **Translating an Angular Application into Multiple Languages**
+
+To translate Angular applications into multiple languages, you can use **@ngx-translate/core** library. It helps manage translations dynamically.
+
+**Steps:**
+
+1. Install `@ngx-translate/core` and `@ngx-translate/http-loader`.
+   ```bash
+   npm install @ngx-translate/core @ngx-translate/http-loader
+   ```
+
+2. Configure translation module in `app.module.ts`:
+   ```typescript
+   import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+   import { HttpClientModule } from '@angular/common/http';
+   import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+   
+   export function HttpLoaderFactory(http: HttpClient) {
+     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+   }
+
+   @NgModule({
+     imports: [
+       HttpClientModule,
+       TranslateModule.forRoot({
+         loader: {
+           provide: TranslateLoader,
+           useFactory: HttpLoaderFactory,
+           deps: [HttpClient]
+         }
+       })
+     ]
+   })
+   export class AppModule {}
+   ```
+
+3. Create translation files (`en.json`, `fr.json`) in `assets/i18n/`.
+
+---
+
+### 44. **Deploying an Angular Application**
+
+To deploy an Angular application, you can follow these steps:
+
+1. **Build the Angular App:**
+   ```bash
+   ng build --prod
+   ```
+   This creates a `dist/` folder with optimized files.
+
+2. **Choose a hosting service:**
+   - **Netlify**, **Vercel**, or **Firebase Hosting** for cloud-based hosting.
+   - **Apache** or **Nginx** for traditional servers.
+
+3. **Deploy:**
+   - For **Firebase**, run:
+     ```bash
+     firebase deploy
+     ```
+   - For **Netlify**, drag and drop the `dist/` folder into the dashboard for deployment.
+
+**Explanation:**
+- The `ng build --prod` command compiles and optimizes the Angular application for production. You then deploy the contents of the `dist/` folder to your chosen server.
+
+### 45. **Displaying Different Environments like UAT and Development**
+
+Angular allows you to manage multiple environments (like UAT, Development, Production) using environment configuration files. These files help configure the application differently based on the environment.
+
+1. **Set up environment files** in `src/environments/`:
+   - `environment.ts` (for development)
+   - `environment.uat.ts` (for UAT)
+   - `environment.prod.ts` (for production)
+
+2. **Configure the environment file**:
+   ```typescript
+   // environment.ts
+   export const environment = {
+     production: false,
+     apiUrl: 'https://dev-api.example.com'
+   };
+
+   // environment.uat.ts
+   export const environment = {
+     production: false,
+     apiUrl: 'https://uat-api.example.com'
+   };
+
+   // environment.prod.ts
+   export const environment = {
+     production: true,
+     apiUrl: 'https://api.example.com'
+   };
+   ```
+
+3. **Use `environment` in services** to access different values based on the environment:
+   ```typescript
+   import { environment } from '../environments/environment';
+
+   apiUrl = environment.apiUrl;
+   ```
+
+4. **Run Angular builds for each environment**:
+   ```bash
+   ng build --configuration=uat
+   ng build --configuration=production
+   ```
+
+**Explanation:**  
+Using Angular’s environment configuration setup, you can easily manage different endpoints, features, and settings for various environments (like Development, UAT, and Production) without modifying code each time you switch environments.
+
+---
+
+### 46. **Designing an Application Based on a Figma Design**
+
+When implementing a design from **Figma** in Angular:
+
+1. **Export Assets** from Figma (icons, images, SVGs) and add them to your Angular project.
+2. **Use CSS Frameworks** (like Bootstrap or Tailwind) to maintain consistent styling.
+3. **Create Reusable Components**: Break down the design into components like headers, footers, modals, and form sections.
+4. **Implement Exact Styling**: Use Flexbox, CSS Grid, or even custom styles to replicate the Figma layout as closely as possible.
+5. **Use Figma’s CSS Properties**: Figma allows you to inspect and copy CSS properties directly, which you can then adapt in your Angular components.
+
+**Example:**
+
+```html
+<div class="card">
+  <img src="assets/example-icon.svg" alt="Icon">
+  <h2>Card Title</h2>
+  <p>Card content goes here...</p>
+</div>
+```
+
+**Explanation:**  
+Designing based on Figma involves converting Figma’s layout and styling details into HTML/CSS structures and Angular components that closely mirror the original design.
+
+---
+
+### 47. **Usage of `@if` and `@for` in Angular 17**
+
+Angular 17 introduced new control flow syntax with `@if` and `@for` directives, making it easier to work with conditionals and loops in templates, similarly to other frameworks.
+
+**Example: Using `@if`**
+
+```html
+<div *ngIf="isLoggedIn; else loginTemplate">
+  <p>Welcome, User!</p>
+</div>
+<ng-template #loginTemplate>
+  <p>Please log in.</p>
+</ng-template>
+```
+
+**Explanation:**  
+- **`@if`** allows for easier conditional rendering in the template, improving readability.
+
+**Example: Using `@for`**
+
+```html
+<div *ngFor="let item of items">
+  <p>{{ item.name }}</p>
+</div>
+```
+
+**Explanation:**  
+- **`@for`** provides a concise way to iterate over arrays or lists directly in the template, allowing developers to reduce boilerplate code and keep templates clean.
+
+---
+
+### 48. **Services in Angular and Their Purpose**
+
+Services in Angular are used to encapsulate reusable business logic and provide shared data or functions across components. Services are generally used for tasks like HTTP requests, authentication, state management, and other cross-cutting concerns.
+
+**Example: Creating a Service**
+
+1. Generate a service:
+   ```bash
+   ng generate service data
+   ```
+
+2. Use the service:
+   ```typescript
+   import { Injectable } from '@angular/core';
+   import { HttpClient } from '@angular/common/http';
+   import { Observable } from 'rxjs';
+
+   @Injectable({
+     providedIn: 'root'
+   })
+   export class DataService {
+     private apiUrl = 'https://api.example.com/data';
+
+     constructor(private http: HttpClient) {}
+
+     getData(): Observable<any> {
+       return this.http.get<any>(this.apiUrl);
+     }
+   }
+   ```
+
+3. Inject the service into a component:
+   ```typescript
+   import { DataService } from './data.service';
+
+   export class AppComponent {
+     constructor(private dataService: DataService) {}
+
+     ngOnInit() {
+       this.dataService.getData().subscribe(data => console.log(data));
+     }
+   }
+   ```
+
+**Explanation:**  
+- The `DataService` here encapsulates the API call, and it can be injected into multiple components, promoting reusability.
+
+---
+
+### 49. **HTTP Methods and Displaying Error Status Messages**
+
+HTTP methods like `GET`, `POST`, `PUT`, and `DELETE` are commonly used to interact with APIs. Error handling can be managed using **Angular’s `HttpInterceptor`** or directly in a service.
+
+**Example: Handling HTTP Errors with `HttpClient`**
+
+```typescript
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class DataService {
+  private apiUrl = 'https://api.example.com/data';
+
+  constructor(private http: HttpClient) {}
+
+  getData() {
+    return this.http.get(this.apiUrl).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'Unknown error!';
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `Client-side error: ${error.error.message}`;
+    } else {
+      errorMessage = `Server-side error: ${error.status} - ${error.message}`;
+    }
+    console.error(errorMessage);
+    return throwError(() => errorMessage);
+  }
+}
+```
+
+**Explanation:**  
+The `handleError` method provides a mechanism to handle errors from API responses, allowing you to display meaningful error messages to users.
+
+---
+
+### 50. **Usage of `ng-template`**
+
+`ng-template` is a structural directive used to define sections of HTML that are not rendered by default but can be conditionally included in the DOM. It’s useful for reusable templates, conditionally rendered blocks, and passing templates into components.
+
+**Example: Using `ng-template` with `ngIf`**
+
+```html
+<ng-template #loadingTemplate>
+  <p>Loading...</p>
+</ng-template>
+
+<div *ngIf="isDataLoaded; else loadingTemplate">
+  <p>Data loaded successfully!</p>
+</div>
+```
+
+**Explanation:**  
+- **`ng-template`** provides flexibility in displaying content based on conditions, without duplicating HTML markup.
