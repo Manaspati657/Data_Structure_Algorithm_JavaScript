@@ -292,6 +292,11 @@ In the component where this pipe is used:
 --- 
 
 
+interceptor 
+AuthGuard
+debouncetime method search api
+
+
 
 html syntax
 =========
