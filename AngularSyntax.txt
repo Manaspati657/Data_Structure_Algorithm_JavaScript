@@ -1,26 +1,375 @@
 
 ts page syntax
 =================
-component class 
-service class
-module class 
-routing page - lazy loading
-form - reactive form create
-form - TDF ts page 
-api service methods 
-api service call method syntax - subscribe((data)=>{},(error)=>{})
-authgurd
-directive - mouse over element
-pipe- filter string which string includes numbers
+---
 
+### **1. Component Class (TS Syntax)**
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-example',
+  templateUrl: './example.component.html',
+  styleUrls: ['./example.component.css']
+})
+export class ExampleComponent implements OnInit {
+  title: string = 'Hello World';
+
+  constructor() { }
+
+  ngOnInit(): void {
+    // Component initialization logic
+  }
+}
+```
+
+---
+
+### **2. Service Class (TS Syntax)**
+
+```typescript
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ExampleService {
+  private apiUrl = 'https://api.example.com/data';
+
+  constructor(private http: HttpClient) { }
+
+  getData(): Observable<any> {
+    return this.http.get<any>(this.apiUrl);
+  }
+}
+```
+
+---
+
+### **3. Module Class (TS Syntax)**
+
+```typescript
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+import { ExampleComponent } from './example/example.component';
+import { ExampleService } from './example/example.service';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    ExampleComponent
+    //here we can add component, directive and pipes 
+  ],
+  imports: [
+    BrowserModule,
+    // any module we have to used their features here
+  ],
+  providers: [
+    ExampleService,
+    // any service , interceptor 
+  ],
+  bootstrap: [AppComponent] // initial component to load while application run
+})
+export class AppModule { }
+```
+
+---
+
+### **4. Routing with Lazy Loading (TS Syntax)**
+
+**app-routing.module.ts**:
+```typescript
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [
+  { path: '', loadChildren: () => import('./example/example.module').then(m => m.ExampleModule) }
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+```
+
+---
+
+### **5. Reactive Form Creation (TS Syntax)**
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+@Component({
+  selector: 'app-form',
+  templateUrl: './form.component.html'
+})
+export class FormComponent implements OnInit {
+  form: FormGroup;
+
+  constructor(private fb: FormBuilder) {
+    this.form = this.fb.group({
+      username: ['', [Validators.required, Validators.maxLength(20)]],
+      age: ['', [Validators.required, Validators.max(99)]]
+    });
+  }
+
+  ngOnInit(): void {}
+
+  onSubmit(): void {
+    if (this.form.valid) {
+      console.log(this.form.value);
+    }
+  }
+}
+```
+
+---
+
+### **6. Template-Driven Form Setup (TS Syntax)**
+
+```typescript
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-tdf-form',
+  templateUrl: './tdf-form.component.html'
+})
+export class TdfFormComponent {
+  user = {
+    name: '',
+    age: null
+  };
+
+  onSubmit(form: any): void {
+    console.log(form.value);
+  }
+}
+```
+
+---
+
+### **7. API Service Methods (TS Syntax)**
+
+```typescript
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ApiService {
+  private apiUrl = 'https://api.example.com/data';
+
+  constructor(private http: HttpClient) {}
+
+  getData(): Observable<any> {
+    return this.http.get<any>(this.apiUrl);
+  }
+
+  postData(data: any): Observable<any> {
+    return this.http.post<any>(this.apiUrl, data, {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    });
+  }
+}
+```
+
+---
+
+### **8. API Service Call with `.subscribe()` (TS Syntax)**
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { ApiService } from './api.service';
+
+@Component({
+  selector: 'app-api',
+  templateUrl: './api.component.html'
+})
+export class ApiComponent implements OnInit {
+
+  constructor(private apiService: ApiService) {}
+
+  ngOnInit(): void {
+    this.apiService.getData().subscribe(
+      (data) => {
+        console.log('Data:', data);
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+  }
+}
+```
+
+---
+
+### **9. AuthGuard (TS Syntax)**
+
+**auth.guard.ts**:
+```typescript
+import { Injectable } from '@angular/core';
+import { CanActivate, Router } from '@angular/router';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthGuard implements CanActivate {
+
+  constructor(private router: Router) {}
+
+  canActivate(): boolean {
+    const isAuthenticated = /* logic to check authentication */;
+    if (isAuthenticated) {
+      return true;
+    } else {
+      this.router.navigate(['/login']);
+      return false;
+    }
+  }
+}
+```
+
+---
+
+### **10. Custom Directive for Mouseover Styling (TS Syntax)**
+
+```typescript
+import { Directive, ElementRef, HostListener, Renderer2 } from '@angular/core';
+
+@Directive({
+  selector: '[appMouseOverHighlight]'
+})
+export class MouseOverHighlightDirective {
+
+  constructor(private el: ElementRef, private renderer: Renderer2) {}
+
+  @HostListener('mouseenter') onMouseEnter() {
+    this.renderer.setStyle(this.el.nativeElement, 'color', 'blue');
+  }
+
+  @HostListener('mouseleave') onMouseLeave() {
+    this.renderer.removeStyle(this.el.nativeElement, 'color');
+  }
+}
+```
+
+---
+
+### **11. Custom Pipe for Filtering Strings with Numbers (TS Syntax)**
+
+**filter-numeric.pipe.ts**:
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'filterNumeric'
+})
+export class FilterNumericPipe implements PipeTransform {
+
+  transform(value: string[]): string[] {
+    return value.filter(str => /\d/.test(str));  // Filters strings that include numbers
+  }
+}
+```
+
+In the component where this pipe is used:
+```html
+<!-- Assume strings is an array of strings -->
+<div *ngFor="let item of strings | filterNumeric">
+  {{ item }}
+</div>
+```
+
+--- 
 
 
 
 html syntax
 =========
-template driven form 
-reactive form 
-for loop 
-if else
-switch case 
 
+### **1. Template-Driven Form (HTML Syntax)**
+
+In template-driven forms, you use Angular’s `[(ngModel)]` directive to bind form controls.
+
+```html
+<form #form="ngForm" (ngSubmit)="onSubmit(form)">
+  <label for="name">Name:</label>
+  <input type="text" id="name" name="name" [(ngModel)]="user.name" required>
+
+  <label for="age">Age:</label>
+  <input type="number" id="age" name="age" [(ngModel)]="user.age" required>
+
+  <button type="submit" [disabled]="form.invalid">Submit</button>
+</form>
+```
+
+### **2. Reactive Form (HTML Syntax)**
+
+In reactive forms, you bind the form to the component’s `FormGroup` instance using `[formGroup]` and form controls with `formControlName`.
+
+```html
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <label for="username">Username:</label>
+  <input type="text" id="username" formControlName="username">
+
+  <label for="age">Age:</label>
+  <input type="number" id="age" formControlName="age">
+
+  <button type="submit" [disabled]="form.invalid">Submit</button>
+</form>
+```
+
+---
+
+### **3. For Loop (`*ngFor` Directive)**
+
+Use `*ngFor` to loop through an array in Angular templates.
+
+```html
+<ul>
+  <li *ngFor="let item of items; let i = index">
+    {{ i + 1 }}. {{ item }}
+  </li>
+</ul>
+```
+
+---
+
+### **4. If-Else (`*ngIf` Directive)**
+
+Use `*ngIf` to conditionally display elements. You can also specify an "else" template.
+
+```html
+<div *ngIf="isLoggedIn; else loggedOut">
+  <p>Welcome back, user!</p>
+</div>
+<ng-template #loggedOut>
+  <p>Please log in.</p>
+</ng-template>
+```
+
+---
+
+### **5. Switch Case (`[ngSwitch]` Directive)**
+
+Use `[ngSwitch]` for conditional rendering based on multiple cases.
+
+```html
+<div [ngSwitch]="status">
+  <p *ngSwitchCase="'success'">Operation was successful!</p>
+  <p *ngSwitchCase="'error'">An error occurred.</p>
+  <p *ngSwitchCase="'loading'">Loading...</p>
+  <p *ngSwitchDefault>Please wait.</p>
+</div>
+```
+
+---
